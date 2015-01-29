@@ -1,4 +1,4 @@
-package com.besuikerd.mirandacraft.common.utils.tuple;
+package com.besuikerd.mirandacraft.lib.utils.tuple;
 
 public class Vector3 extends Tuple3<Integer, Integer, Integer>{
 	public final int x;

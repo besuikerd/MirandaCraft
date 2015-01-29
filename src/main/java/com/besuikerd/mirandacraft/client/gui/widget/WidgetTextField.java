@@ -6,8 +6,6 @@ import net.minecraft.util.ChatAllowedCharacters;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Rectangle;
 
-import scala.annotation.meta.field;
-
 import com.besuikerd.mirandacraft.client.gui.IWidgetHandler;
 import com.besuikerd.mirandacraft.client.gui.MouseButton;
 import com.besuikerd.mirandacraft.common.network.NetworkHandler;
@@ -124,6 +122,10 @@ public class WidgetTextField extends AbstractWidget implements IHasData<String>{
 	
 	private void fieldUpdated(){
 		//TODO fix caret
+		
+		if(gui instanceof ITextUpdatedListener){
+			((ITextUpdatedListener) gui).onTextUpdated(getIdentifier(), text.toString());
+		}
 		
 		if(gui instanceof IHasTileEntity){
 			TileEntity te = ((IHasTileEntity) gui).getTileEntity();

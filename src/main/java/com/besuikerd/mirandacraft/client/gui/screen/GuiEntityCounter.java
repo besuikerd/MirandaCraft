@@ -9,6 +9,7 @@ import com.besuikerd.mirandacraft.client.gui.GuiContainerBesu;
 import com.besuikerd.mirandacraft.client.gui.texture.Glyph;
 import com.besuikerd.mirandacraft.client.gui.texture.TextureLocation;
 import com.besuikerd.mirandacraft.client.gui.texture.WidgetStatefulTextures;
+import com.besuikerd.mirandacraft.client.gui.widget.ITextUpdatedListener;
 import com.besuikerd.mirandacraft.client.gui.widget.WidgetButton;
 import com.besuikerd.mirandacraft.client.gui.widget.WidgetCheckbox;
 import com.besuikerd.mirandacraft.client.gui.widget.WidgetLabel;
@@ -16,9 +17,14 @@ import com.besuikerd.mirandacraft.client.gui.widget.WidgetList;
 import com.besuikerd.mirandacraft.client.gui.widget.WidgetScrollbar;
 import com.besuikerd.mirandacraft.client.gui.widget.WidgetTextField;
 import com.besuikerd.mirandacraft.common.tileentity.TileEntityEntityCounter;
-import com.besuikerd.mirandacraft.common.utils.tuple.Vector2;
+import com.besuikerd.mirandacraft.lib.classifier.ClassifierParser;
+import com.besuikerd.mirandacraft.lib.classifier.ClassifierRule;
+import com.besuikerd.mirandacraft.lib.classifier.ParseException;
+import com.besuikerd.mirandacraft.lib.entity.filter.EntityFilterValidator;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Vector2;
+import com.google.common.collect.Lists;
 
-public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter>{
+public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter> implements ITextUpdatedListener{
 
 	private WidgetButton buttonAdd;
 	private WidgetButton buttonRemove;
@@ -32,6 +38,9 @@ public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter>{
 	private WidgetButton buttonIncreaseCount;
 	private WidgetButton buttonDecreaseCount;
 	private WidgetCheckbox checkboxIsAnalog;
+	
+	private EntityFilterValidator validator;
+	private ClassifierParser classifierParser = new ClassifierParser();
 	
 	public enum Widgets{
 		BUTTON_ADD,
@@ -54,6 +63,7 @@ public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter>{
 		super(container, tile, player);
 		this.xSize = 186;
 		this.ySize = 125;
+		this.validator = new EntityFilterValidator(tile.getEntityFilterVisitor());
 		this.background = TextureLocation.GUI_ENTITY_COUNTER;
 		this.title = "Entity Counter";
 		initWidgets();
@@ -61,9 +71,10 @@ public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter>{
 	
 	private void initWidgets(){
 		this.buttonAdd = addWidget(new WidgetButton(Widgets.BUTTON_ADD.ordinal(), this, RECT_BUTTON_ADD, Glyph.PLUS));
+		buttonAdd.setEnabled(false);
 		this.buttonRemove = addWidget(new WidgetButton(Widgets.BUTTON_REMOVE.ordinal(), this, RECT_BUTTON_REMOVE, Glyph.MINUS));
 		this.textField = addWidget(new WidgetTextField(Widgets.TEXTFIELD.ordinal(), this, RECT_TEXTFIELD));
-		this.list = addWidget(new WidgetList(Widgets.LIST.ordinal(), this, RECT_LIST, tile.getEntityNames()));
+		this.list = addWidget(new WidgetList(Widgets.LIST.ordinal(), this, RECT_LIST));
 		this.scrollbar = addWidget(new WidgetScrollbar(Widgets.SCROLLBAR.ordinal(), this, RECT_SCROLL, list));
 		
 		this.buttonIncreaseRange = addWidget(new WidgetButton(Widgets.BUTTON_INCREASE_RANGE.ordinal(), this, RECT_BUTTON_RANGE_INC, WidgetStatefulTextures.BUTTON_SMALL, Glyph.ARROW_UP));
@@ -83,14 +94,34 @@ public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter>{
 	}
 	
 	@Override
+	public void onTextUpdated(int widgetId, String text) {
+		if(widgetId == textField.getIdentifier()){
+			try{
+				ClassifierRule rule = classifierParser.parse(text);
+				String error = rule.visit(validator, null);
+				if(error != null){
+					buttonAdd.setEnabled(false);
+					buttonAdd.setTooltip(error);
+				} else{
+					buttonAdd.setEnabled(true);
+					buttonAdd.clearToolTip();
+				}
+			} catch(ParseException e){
+				buttonAdd.setEnabled(false);
+				buttonAdd.setTooltip(e.getMessage());
+			}
+		}
+	}
+	
+	@Override
 	public void update() {
-		buttonAdd.setEnabled(!textField.getText().isEmpty() && !tile.getEntityNames().contains(textField.getText()));
-		buttonRemove.setEnabled(!tile.getEntityNames().isEmpty() && list.getSelectedItemIndex() != -1);
+		//buttonAdd.setEnabled(!textField.getText().isEmpty() && !tile.getEntityRules().contains(textField.getText()));
+		buttonRemove.setEnabled(!tile.getEntityRules().isEmpty() && list.getSelectedItemIndex() != -1);
 		labelRange.setText("Range: " + tile.getRange());
 		labelCount.setText("Max Count: " + tile.getMaxCount());
 		checkboxIsAnalog.setChecked(tile.isAnalog());
 		checkboxIsAnalog.setTooltip(tile.isAnalog() ? "Set to digital mode" : "Set to analog mode");
-		list.setList(tile.getEntityNames());
+		list.setList(Lists.newArrayList(tile.getEntityRules().keySet()));
 	}
 	
 	

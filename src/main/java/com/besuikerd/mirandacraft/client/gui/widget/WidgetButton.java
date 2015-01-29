@@ -92,16 +92,15 @@ public class WidgetButton extends AbstractWidget{
 				TileEntity te = ((IHasTileEntity) gui).getTileEntity();
 				if(te instanceof IClickListener){
 					if(dataProvider != null){
-						((IClickListener) te).onClick(getIdentifier(), dataProvider.getData());
-						NetworkHandler.getInstance().sendToServer(new PacketPressedWithData(getIdentifier(), dataProvider.getData(), te.xCoord, te.yCoord, te.zCoord));
+						((IClickListener) te).onClick(getIdentifier(), button, dataProvider.getData());
+						NetworkHandler.getInstance().sendToServer(new PacketPressedWithData(dataProvider.getData(), button.ordinal(), getIdentifier(), te.xCoord, te.yCoord, te.zCoord));
 					} else{
-						((IClickListener) te).onClick(getIdentifier(), null);
-						NetworkHandler.getInstance().sendToServer(new PacketPressed(getIdentifier(), te.xCoord, te.yCoord, te.zCoord));
+						((IClickListener) te).onClick(getIdentifier(), button, null);
+						NetworkHandler.getInstance().sendToServer(new PacketPressed(button.ordinal(), getIdentifier(), te.xCoord, te.yCoord, te.zCoord));
 					}
 					
 				}
 			}
 		}
-		
 	}
 }

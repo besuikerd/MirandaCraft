@@ -3,7 +3,7 @@ package com.besuikerd.mirandacraft.client.gui.widget;
 import org.lwjgl.util.Rectangle;
 
 import com.besuikerd.mirandacraft.client.gui.IWidgetHandler;
-import com.besuikerd.mirandacraft.common.utils.tuple.Vector2;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Vector2;
 
 public class WidgetLabel extends AbstractWidget implements IHasData<String>{
 

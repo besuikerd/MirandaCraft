@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import com.besuikerd.mirandacraft.common.utils.tuple.Tuple2;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Tuple2;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 
@@ -26,7 +26,6 @@ public class ByteBufUtils2 {
 	
 	public static void writeSerializable(ByteBuf buf, Serializable o) {
 		if(Integer.class.isInstance(o)){
-			System.out.println("writing int...");
 			buf.writeByte(Type.INTEGER.ordinal());
 			buf.writeInt((Integer) o);
 		} else if(o instanceof String){

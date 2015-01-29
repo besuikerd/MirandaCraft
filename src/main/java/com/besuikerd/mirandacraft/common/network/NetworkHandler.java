@@ -27,14 +27,19 @@ public class NetworkHandler {
 	public void init(){
 		register(PacketTileEntity.class, Side.CLIENT);
 		register(PacketPressed.class, Side.SERVER);
-		register(PacketPressedWithData.class, Side.SERVER);
+		register(PacketPressedWithData.class,  Side.SERVER);
 		register(PacketUpdateText.class, Side.SERVER);
 	}
 	
-	private <E extends AbstractPacket<? super E>> void register(Class<E> cls, Side side){
+	private <E extends AbstractPacket<E>> void register(Class<E> cls, Side side){
 		//ugly cast to circumvent type system, is still type safe though
-		Class<IMessageHandler<E,E>> handlerClass = (Class<IMessageHandler<E, E>>) cls;
-		channel.registerMessage(handlerClass, cls, id++, side);
+		//
+		register(cls, cls, side);
+	}
+	 
+	
+	private <REQ extends IMessage, REPLY extends IMessage> void register(Class<? extends IMessageHandler<REQ, REPLY>> handler, Class<REQ> msg, Side side){
+		channel.registerMessage(handler, msg, id++, side);
 	}
 	
 	public void sendToServer(IMessage message){

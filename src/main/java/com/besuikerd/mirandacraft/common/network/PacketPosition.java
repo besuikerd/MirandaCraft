@@ -2,7 +2,7 @@ package com.besuikerd.mirandacraft.common.network;
 
 import io.netty.buffer.ByteBuf;
 
-import com.besuikerd.mirandacraft.common.utils.tuple.Vector3;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Vector3;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 

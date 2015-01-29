@@ -1,14 +1,15 @@
 package com.besuikerd.mirandacraft.common.tileentity;
 
-import sun.rmi.runtime.NewThreadAction;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.besuikerd.mirandacraft.common.block.BlockBesu;
-import com.besuikerd.mirandacraft.common.utils.tuple.NBTUtils;
+import com.besuikerd.mirandacraft.lib.utils.tuple.NBTUtils;
 
 public abstract class TileEntityMachine extends TileEntityBesu implements IDirectioned, IDismantleable{
 
@@ -17,7 +18,6 @@ public abstract class TileEntityMachine extends TileEntityBesu implements IDirec
 	@Override
 	public void setDirection(int direction) {
 		this.direction = direction;
-		System.out.println("direction set: " + direction);
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
@@ -67,8 +67,6 @@ public abstract class TileEntityMachine extends TileEntityBesu implements IDirec
 			}
 			
 			readFromNBT(tag);
-			
-			System.out.println(tag);
 		}
 	}
 
@@ -82,5 +80,21 @@ public abstract class TileEntityMachine extends TileEntityBesu implements IDirec
 		tag.removeTag("z");
 		tag.removeTag("id");
 		return tag;
+	}
+	
+	protected AxisAlignedBB calculateBoundingBoxInFront(double range, double height){
+		double halfRange = (range - 1) / 2;
+		switch(ForgeDirection.values()[getDirection()]){
+		case NORTH:
+			return calculateBoundingBoxAt(xCoord + .5, yCoord, zCoord - halfRange - .5, range, height);
+		case EAST:
+			return calculateBoundingBoxAt(xCoord + 1.5 + halfRange, yCoord, zCoord + .5, range, height);
+		case SOUTH:
+			return calculateBoundingBoxAt(xCoord + .5, yCoord, zCoord + 1.5 + halfRange, range, height);
+		case WEST:
+			return calculateBoundingBoxAt(xCoord - halfRange - .5, yCoord, zCoord + .5, range, height);
+		default:
+			return null;
+		}
 	}
 }

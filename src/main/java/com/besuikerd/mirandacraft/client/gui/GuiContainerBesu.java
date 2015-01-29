@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.besuikerd.mirandacraft.client.gui.widget.IWidget;
 import com.besuikerd.mirandacraft.common.tileentity.IHasTileEntity;
-import com.besuikerd.mirandacraft.common.utils.tuple.Tuple2;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Tuple2;
 
 public abstract class GuiContainerBesu<A extends TileEntity> extends GuiContainer implements IWidgetHandler, IHasTileEntity{
 	private Map<Integer, IWidget> widgets;
@@ -75,15 +75,12 @@ public abstract class GuiContainerBesu<A extends TileEntity> extends GuiContaine
 			widget.draw();
 		}
 
-		System.out.println(new Tuple2(x,y));
 		for(IWidget widget : widgets.values()){
 			if(!widget.getTooltip().isEmpty() && widget.getBounds().contains(x - offsetX, y - offsetY)){
-				System.out.println("drawing tooltip");
 				List<String> tooltips = new LinkedList<String>();
 				for(Tuple2<EnumChatFormatting, String> tooltip : widget.getTooltip()){
 					tooltips.add(tooltip._1 + tooltip._2);
 				}
-				System.out.println("drawing tooltip");
 				drawHoveringText(tooltips, x, y, mc.fontRenderer);
 				
 			}
@@ -138,6 +135,7 @@ public abstract class GuiContainerBesu<A extends TileEntity> extends GuiContaine
 		switch(which){
 		case 0: //Mouse up
 		case 1: //Mouse up
+		case 2: 
 			if(focus != null){
 				focus.onRelease(x, y, MouseButton.values()[which]);
 			}

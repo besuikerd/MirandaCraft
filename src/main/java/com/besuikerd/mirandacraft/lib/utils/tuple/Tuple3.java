@@ -1,4 +1,4 @@
-package com.besuikerd.mirandacraft.common.utils.tuple;
+package com.besuikerd.mirandacraft.lib.utils.tuple;
 public class Tuple3<A, B, C> {
 	public final A _1;
 	public final B _2;

@@ -1,4 +1,4 @@
-package com.besuikerd.mirandacraft.common.utils.tuple;
+package com.besuikerd.mirandacraft.lib.utils.tuple;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
@@ -38,7 +38,6 @@ public class NBTUtils {
 	 * @return
 	 */
 	public static Set<String> keyset(NBTTagCompound nbt){
-		System.out.println("nbt tag: " + nbt);
 		ByteBuf buf = Unpooled.buffer();
 		DataOutput out = new ByteBufOutputStream(buf);
 		try {

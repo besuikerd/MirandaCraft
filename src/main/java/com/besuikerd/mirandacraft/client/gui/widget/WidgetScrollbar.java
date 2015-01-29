@@ -87,7 +87,6 @@ public class WidgetScrollbar extends AbstractWidget{
 		int actualHeight = y - clickHeight;
 		int progress = Math.max(0, Math.min(companion.getSize(), (int) (((double) (actualHeight - bounds.getY() - 1) / slideAreaHeight()) * companion.getSize())));
 		companion.setProgress(progress);
-		System.out.println("progress: " + progress + "/" + companion.getSize());
 		
 		
 	}

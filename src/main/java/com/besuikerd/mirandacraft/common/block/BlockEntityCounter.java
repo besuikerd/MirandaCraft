@@ -23,11 +23,6 @@ public class BlockEntityCounter extends BlockMachine{
 	private IIcon iconSide;
 	private IIcon iconTopBottom;
 	
-	public BlockEntityCounter() {
-		super(Material.grass);
-	}
-	
-	
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return new TileEntityEntityCounter();

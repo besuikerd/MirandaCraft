@@ -7,7 +7,7 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.util.Rectangle;
 
 import com.besuikerd.mirandacraft.client.gui.MouseButton;
-import com.besuikerd.mirandacraft.common.utils.tuple.Tuple2;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Tuple2;
 
 public interface IWidget {
 	public int getIdentifier();

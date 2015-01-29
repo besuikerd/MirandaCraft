@@ -1,5 +1,7 @@
 package com.besuikerd.mirandacraft.client.gui.widget;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.gui.Gui;
@@ -23,6 +25,10 @@ public class WidgetList extends AbstractWidget implements ScrollbarCompanion, IH
 	public WidgetList(int identifier, IWidgetHandler gui, Rectangle bounds, List<?> items) {
 		super(identifier, gui, bounds);
 		this.items = items;
+	}
+	
+	public WidgetList(int identifier, IWidgetHandler gui, Rectangle bounds) {
+		this(identifier, gui, bounds, Collections.EMPTY_LIST);
 	}
 	
 	public void setItemOffset(int offset){
@@ -75,7 +81,6 @@ public class WidgetList extends AbstractWidget implements ScrollbarCompanion, IH
 			int clickedItem = itemOffset + (y - bounds.getY()) / (itemSize + itemSpace); 
 			if(clickedItem < items.size()){
 				selectedItem = clickedItem;
-				System.out.println("selected: " + getSelectedItem());
 				return true;
 			}
 		case RIGHT:

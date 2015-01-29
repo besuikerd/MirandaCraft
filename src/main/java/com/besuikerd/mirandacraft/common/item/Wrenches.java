@@ -1,9 +1,12 @@
 package com.besuikerd.mirandacraft.common.item;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import scala.actors.threadpool.Arrays;
+import com.besuikerd.mirandacraft.common.Config;
+import com.google.common.collect.Sets;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -11,14 +14,7 @@ public class Wrenches {
 	private static Set<String> wrenches;
 	
 	static{
-		wrenches = new HashSet<String>(Arrays.asList(new String[]{
-			"ToolCertusQuartzWrench",
-			"wrenchItem",
-			"wrench",
-			"pneumaticWrench",
-			"itemToolWrench",
-			"itemToolWrenchElectric"
-		}));
+		wrenches = Sets.newHashSet(Config.validWrenches);
 	}
 	
 	public void registerWrench(Item wrench){
@@ -30,6 +26,9 @@ public class Wrenches {
 	}
 	
 	public static boolean isWrench(ItemStack item){
+		if(item != null){
+			System.out.println(item.getUnlocalizedName());
+		}
 		return item != null && wrenches.contains(item.getUnlocalizedName().substring("item.".length()));
 	}
 }

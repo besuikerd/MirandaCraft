@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 import io.netty.buffer.ByteBuf;
 
-public class PacketPressedWithData extends PacketPressed{
+public class PacketPressedWithData extends PacketPressed<PacketPressedWithData>{
 	public PacketPressedWithData() {
 	}
 
-	public PacketPressedWithData(int widgetId, Object data, int x, int y,
+	public PacketPressedWithData(Object data, int button, int widgetId,  int x, int y,
 			int z) {
-		super(widgetId, x, y, z);
+		super(button, widgetId, x, y, z);
 		this.data = data;
 	}
 

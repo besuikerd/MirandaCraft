@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import com.besuikerd.mirandacraft.client.gui.screen.GuiEntityCounter;
 import com.besuikerd.mirandacraft.common.inventory.ContainerEntityCounter;
 import com.besuikerd.mirandacraft.common.tileentity.TileEntityEntityCounter;
-import com.besuikerd.mirandacraft.common.utils.tuple.Tuple2;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Tuple2;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 

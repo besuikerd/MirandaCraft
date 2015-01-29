@@ -2,6 +2,7 @@ package com.besuikerd.mirandacraft;
 
 import com.besuikerd.mirandacraft.client.gui.GuiHandler;
 import com.besuikerd.mirandacraft.common.CommonProxy;
+import com.besuikerd.mirandacraft.common.Config;
 import com.besuikerd.mirandacraft.common.network.NetworkHandler;
 
 import cpw.mods.fml.common.Mod;
@@ -22,6 +23,7 @@ public class MirandaCraft {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e){
+		Config.init(e.getSuggestedConfigurationFile());
 		proxy.registerBlocks();
 		proxy.registerItems();
 		proxy.registerTileEntities();

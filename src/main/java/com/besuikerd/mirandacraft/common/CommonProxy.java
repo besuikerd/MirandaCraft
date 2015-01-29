@@ -2,16 +2,21 @@ package com.besuikerd.mirandacraft.common;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
-import com.besuikerd.mirandacraft.common.block.Blocks;
+import com.besuikerd.mirandacraft.common.block.MirandaBlocks;
 import com.besuikerd.mirandacraft.common.tileentity.TileEntityEntityCounter;
+import com.besuikerd.mirandacraft.common.tileentity.TileEntityShield;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy {
 	public void registerBlocks(){
-		register(Blocks.entityCounter);
+		register(MirandaBlocks.entityCounter);
+		//register(Blocks.shield);
 	}
 	
 	public void registerItems(){
@@ -20,10 +25,11 @@ public class CommonProxy {
 	
 	public void registerTileEntities(){
 		register(TileEntityEntityCounter.class);
+		//register(TileEntityShield.class);
 	}
 	
 	public void registerRecipes(){
-		
+		GameRegistry.addRecipe(new ItemStack(MirandaBlocks.entityCounter), new Object[]{"geg", "rvr", "gdg", 'g', new ItemStack(Items.gold_ingot), 'e', new ItemStack(Items.ender_eye), 'r', new ItemStack(Blocks.redstone_block), 'v', new ItemStack(Blocks.emerald_block), 'd', new ItemStack(Items.diamond)});
 	}
 	
 	public void registerRenderers(){
@@ -35,7 +41,6 @@ public class CommonProxy {
 	}
 	
 	private void register(Class<? extends TileEntity> tile){
-		System.out.println("registered: " + tile.getSimpleName());
 		GameRegistry.registerTileEntity(tile, tile.getSimpleName());
 	}
 	

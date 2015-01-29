@@ -14,7 +14,7 @@ import org.lwjgl.util.Rectangle;
 import com.besuikerd.mirandacraft.client.gui.IWidgetHandler;
 import com.besuikerd.mirandacraft.client.gui.MouseButton;
 import com.besuikerd.mirandacraft.client.gui.texture.IStatefulTexture;
-import com.besuikerd.mirandacraft.common.utils.tuple.Tuple2;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Tuple2;
 
 public abstract class AbstractWidget implements IWidget{
 	private int identifier;
@@ -60,6 +60,10 @@ public abstract class AbstractWidget implements IWidget{
 		for(String line : lines){
 			addTooltip(line);
 		}
+	}
+	
+	public void clearToolTip(){
+		tooltip.clear();
 	}
 	
 	@Override

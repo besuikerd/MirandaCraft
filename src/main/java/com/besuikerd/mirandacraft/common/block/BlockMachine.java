@@ -12,19 +12,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class BlockMachine extends BlockBesu{
 
-	protected BlockMachine(Material material) {
-		super(material);
+	protected BlockMachine() {
+		super(Material.piston);
+		setHardness(1.5f);
+		
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int meta, float posX, float posY, float posZ) {
 		TileEntity tile = world.getTileEntity(x, y, z);
+		System.out.println("activated");
 		if(Wrenches.isWrench(player.getCurrentEquippedItem())){
 			if(!player.isSneaking() && tile instanceof IDirectioned){
 				IDirectioned dir = (IDirectioned) tile;
@@ -55,7 +59,6 @@ public abstract class BlockMachine extends BlockBesu{
 				}
 			} else if(player.isSneaking() && tile instanceof IDismantleable && !world.isRemote){
 				IDismantleable dismantleable = (IDismantleable) tile;
-				System.out.println("dismantling");
 				world.setBlock(x, y, z, Blocks.air);
 				world.notifyBlockChange(x, y, z, Blocks.air);
 				ItemStack stack = new ItemStack(this);
@@ -66,5 +69,4 @@ public abstract class BlockMachine extends BlockBesu{
 		}
 		return super.onBlockActivated(world, x, y, z, player, meta, posX, posY, posZ);
 	}
-	
 }

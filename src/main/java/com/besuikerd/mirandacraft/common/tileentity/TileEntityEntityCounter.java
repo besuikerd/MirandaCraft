@@ -1,28 +1,35 @@
 package com.besuikerd.mirandacraft.common.tileentity;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.ForgeDirection;
 
+import com.besuikerd.mirandacraft.client.gui.MouseButton;
 import com.besuikerd.mirandacraft.client.gui.screen.GuiEntityCounter;
 import com.besuikerd.mirandacraft.client.gui.widget.IClickListener;
-import com.besuikerd.mirandacraft.common.utils.tuple.Vector2;
-import com.besuikerd.mirandacraft.common.utils.tuple.Vector3;
+import com.besuikerd.mirandacraft.common.Config;
+import com.besuikerd.mirandacraft.lib.classifier.ClassifierParser;
+import com.besuikerd.mirandacraft.lib.classifier.ClassifierRule;
+import com.besuikerd.mirandacraft.lib.classifier.ParseException;
+import com.besuikerd.mirandacraft.lib.entity.filter.EntityFilterValidator;
+import com.besuikerd.mirandacraft.lib.entity.filter.EntityFilterVisitor;
 
 public class TileEntityEntityCounter extends TileEntityMachine implements IClickListener, IRedstoneProvider{
-	private List<String> entityNames;
+	
+	private Map<String, ClassifierRule> entityRules;
+	
+	private ClassifierParser classifierParser  = new ClassifierParser();
+	private EntityFilterVisitor entityFilterVisitor = new EntityFilterVisitor();
+	private EntityFilterValidator entityFilterValidator = new EntityFilterValidator(entityFilterVisitor);
+	
 	private int range;
 	private int maxCount;
 	
@@ -31,19 +38,21 @@ public class TileEntityEntityCounter extends TileEntityMachine implements IClick
 	
 	private int entitiesCounted;
 	
-	private int rangeHeight = 3;
-	private int tickDelay = 20;
+	private int rangeHeight;
+	private int tickDelay;
 	private int currentTick = 0;
 	
 	private boolean isAnalog;
 	
 	public TileEntityEntityCounter() {
-		this.entityNames = new ArrayList<String>();
+		this.entityRules = new LinkedHashMap<String,ClassifierRule>();
 		this.range = 3;
-		this.maxCount = 10;
-		this.rangeLimit = 5;
-		this.countLimit = 100;
-		this.isAnalog = true;
+		this.tickDelay = 20;
+		this.rangeHeight = 3;
+		this.maxCount = 1;
+		this.rangeLimit = Config.entityCounterMaxRange;
+		this.countLimit = Config.entityCounterMaxCount;
+		this.isAnalog = false;
 	}
 	
 	@Override
@@ -51,80 +60,57 @@ public class TileEntityEntityCounter extends TileEntityMachine implements IClick
 		if(currentTick++ == tickDelay){
 			currentTick = 0;
 			int count = 0;
-			System.out.println("world: " + worldObj);
-			AxisAlignedBB boundingBox = calculateBoundingBox();
+			AxisAlignedBB boundingBox = calculateBoundingBoxInFront(range, rangeHeight);
+			
 			if(boundingBox == null){
 				return;
 			}
 			List<Entity> entities = (List<Entity>) worldObj.getEntitiesWithinAABB(Entity.class, boundingBox);
 			for(Entity entity : entities){
-				if(entity instanceof EntityLiving){
-					EntityLiving entityLiving = (EntityLiving) entity;
-					if(entityLiving.hasCustomNameTag() && validEntityName(entityLiving.getCustomNameTag())){
-						count++;
-					} else {
-						String name = EntityList.getEntityString(entityLiving);
-						if(validEntityName(name)){
-							count++;
+				boolean pass = entityRules.values().isEmpty();
+				if(!pass){
+					for(ClassifierRule rule : entityRules.values()){
+						if(rule.visit(entityFilterVisitor, entity)){
+							pass = true;
+							break;
 						}
 					}
-				} else if(entity instanceof EntityItem){
-					EntityItem entityItem = (EntityItem) entity;
-					ItemStack i = entityItem.getEntityItem();
-				} else if(entity instanceof EntityXPOrb && validEntityName("xp")){
+				}
+				if(pass){
 					count++;
 				}
-				
 			}
-			//System.out.println(String.format("Entity count: (%d/%d)", count ,entities.size()));
 			this.entitiesCounted = count;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			worldObj.notifyBlockChange(xCoord, yCoord, zCoord, getBlockType());
 		}
 	}
 	
-	private boolean validEntityName(String entityName){
-		for(String name : entityNames){
-			if(entityName.toLowerCase().equals(name.toLowerCase()) || entityName.toLowerCase().matches(name)){
-				return true;
+	
+	public Map<String, ClassifierRule> getEntityRules() {
+		return entityRules;
+	}
+	
+	public void addEntityRule(String input){
+		try{
+			ClassifierRule rule = classifierParser.parse(input);
+			if(rule.visit(entityFilterValidator, null) == null){
+				entityRules.put(input, rule);
 			}
+		} catch(ParseException e){
 		}
-		return false;
 	}
 	
-	private AxisAlignedBB calculateBoundingBox(){
-		Vector2 startingPoint = null;
-		int halfRange = (range - 1) / 2;
-		switch(ForgeDirection.values()[getDirection()]){
-		case NORTH:
-			startingPoint = new Vector2(xCoord - halfRange, zCoord - range);
-			break;
-		case EAST:
-			startingPoint = new Vector2(xCoord + 1, zCoord - halfRange);
-			break;
-		case SOUTH:
-			startingPoint = new Vector2(xCoord - halfRange, zCoord + 1);
-			break;
-		case WEST:
-			startingPoint = new Vector2(xCoord - range, zCoord - halfRange);
-			break;
-		default:
-			return null;
+	public void removeRule(int index){
+		int count = 0;
+		
+		for(String key : entityRules.keySet()){
+			if(count++ == index){
+				entityRules.remove(key);
+				break;
+			}
+			
 		}
-		return AxisAlignedBB.getBoundingBox(startingPoint._1, yCoord - rangeHeight, startingPoint._2, startingPoint._1 + range, yCoord + rangeHeight, startingPoint._2 + range);
-	}
-	
-
-	public List<String> getEntityNames() {
-		return entityNames;
-	}
-	
-	public void addEntityName(String name){
-		entityNames.add(name);
-	}
-	
-	public void removeName(int index){
-		entityNames.remove(index);
 	}
 
 	public void setRange(int range) {
@@ -146,6 +132,10 @@ public class TileEntityEntityCounter extends TileEntityMachine implements IClick
 	public boolean isAnalog() {
 		return isAnalog;
 	}
+	
+	public EntityFilterVisitor getEntityFilterVisitor() {
+		return entityFilterVisitor;
+	}
 
 	@Override
 	public int getRedstoneStrength() {
@@ -161,23 +151,22 @@ public class TileEntityEntityCounter extends TileEntityMachine implements IClick
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		NBTTagList list = new NBTTagList();
-		for(int i = 0 ; i < entityNames.size() ; i++){
-			list.appendTag(new NBTTagString(entityNames.get(i)));
+		for(String rule : entityRules.keySet()){
+			list.appendTag(new NBTTagString(rule));
 		}
 		tag.setTag("entityList", list);
 		tag.setInteger("range", range);
 		tag.setInteger("maxCount", maxCount);
 		tag.setBoolean("isAnalog", isAnalog);
-		//System.out.println("wrote: " + tag);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		this.entityNames = new ArrayList<String>();
 		NBTTagList list = tag.getTagList("entityList", Constants.NBT.TAG_STRING);
+		this.entityRules.clear();
 		for(int i = 0 ; i < list.tagCount() ; i++){
-			entityNames.add(list.getStringTagAt(i));
+			addEntityRule(list.getStringTagAt(i));
 		}
 		this.range = tag.getInteger("range");
 		this.maxCount = tag.getInteger("maxCount");
@@ -185,36 +174,67 @@ public class TileEntityEntityCounter extends TileEntityMachine implements IClick
 	}
 	
 	@Override
-	public void onClick(int widgetId, Object data) {
-		System.out.println(String.format("onClick[id=%d, data=%s]", widgetId, data));
+	public void onClick(int widgetId, MouseButton button, Object data) {
+		System.out.println(button);
 		switch(GuiEntityCounter.Widgets.values()[widgetId]){
 		case BUTTON_ADD:
-			entityNames.add(data.toString());
+			addEntityRule(data.toString());
 			break;
 		case BUTTON_REMOVE:
 			int index = (Integer) data;
 			if(index != -1){
-				entityNames.remove(index);
+				removeRule(index);
 			}
 			break;
 		case BUTTON_INCREASE_RANGE:
-			if(range + 2 <= rangeLimit){
-				range += 2;
+			switch(button){
+			case LEFT:
+				range = Math.min(range + 2, rangeLimit);
+				break;
+			case MIDDLE:
+				range = Math.min(range + 10, rangeLimit);
+				break;
+			case RIGHT:
+				range = rangeLimit;
+				break;
 			}
 			break;
 		case BUTTON_DECREASE_RANGE:
-			if(range >= 3){
-				range -= 2;
+			switch(button){
+			case LEFT:
+				range = Math.max(range - 2, 1);
+				break;
+			case MIDDLE:
+				range = Math.max(range - 10, 1);
+				break;
+			case RIGHT:
+				range = 1;
+				break;
 			}
 			break;
 		case BUTTON_INCREASE_COUNT:
-			if(maxCount < countLimit){
-				maxCount++;
+			switch(button){
+			case LEFT:
+				maxCount = Math.min(maxCount + 1, countLimit);
+				break;
+			case MIDDLE:
+				maxCount = Math.min(maxCount+ 10, countLimit);
+				break;
+			case RIGHT:
+				maxCount = Math.min(maxCount + 50, countLimit);
+				break;
 			}
 			break;
 		case BUTTON_DECREASE_COUNT:
-			if(maxCount > 1){
-				maxCount--;
+			switch(button){
+			case LEFT:
+				maxCount = Math.max(maxCount - 1, 1);
+				break;
+			case MIDDLE:
+				maxCount = Math.max(maxCount - 10, 1);
+				break;
+			case RIGHT:
+				maxCount = Math.max(maxCount - 50, 1);
 			}
 			break;
 		case CHECKBOX_IS_ANALOG:
