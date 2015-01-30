@@ -74,22 +74,24 @@ public class ClassifierParser {
 	private ClassifierArgument parseArgument(String name, boolean equals) throws ParseException{
 		switch(current.type){
 		case NUMBER:
-			String num = consume().value;
-			if(current.type == TokenType.DOT){
-				consume();
-				String doubleVal = num + "." + accept(TokenType.NUMBER).value;
-				try{
-					return new ClassifierArgumentDouble(name, Double.parseDouble(doubleVal), equals);
-				} catch(NumberFormatException e){
-					throw fail("Invalid number: %s", doubleVal);
-				}
-			} else{
-				try{
-					return new ClassifierArgumentInt(name, Integer.parseInt(num), equals);
-				} catch(NumberFormatException e){
-					throw fail("Invalid number: %s", num);
-				}
+			consume();
+			try{
+				return new ClassifierArgumentDouble(name, Double.parseDouble(consume().value), equals);
+			} catch(NumberFormatException e){
+				throw fail("Invalid number: " + current.value);
 			}
+		case INT:
+			try{
+				return new ClassifierArgumentInt(name, Integer.parseInt(consume().value), equals);
+			} catch(NumberFormatException e){
+				throw fail("Invalid number: " + current.value);
+			}
+		case TRUE:
+			consume();
+			return new ClassifierArgumentBoolean(name, true, equals);
+		case FALSE:
+			consume();
+			return new ClassifierArgumentBoolean(name, false, equals);
 		case LBRACKET:
 			consume();
 			List<ClassifierArgument> list = new LinkedList<ClassifierArgument>();
@@ -141,7 +143,7 @@ public class ClassifierParser {
 		
 		char first = input.charAt(space);
 		
-		
+		Token peek = null;
 		switch(first){
 		case '@': return new Token(TokenType.AT, "" + first, 1 + space);
 		case '[': return new Token(TokenType.LBRACKET, "" + first, 1 + space);
@@ -155,26 +157,43 @@ public class ClassifierParser {
 		case ';': return new Token(TokenType.SEMICOLON, "" + first, 1 + space);
 		case '=': return new Token(TokenType.EQ, "" + first, 1 + space);
 		case '!':
-			if(input.length() - space > 1 && input.charAt(space + 1) == '='){
-				return new Token(TokenType.NEQ, "!=", space + 2);
+			if((peek = peekString(TokenType.NEQ, space)) != null){
+				return peek;
 			}
 		case '&':
-			if(input.length() - space > 1 && input.charAt(space + 1) == '&'){
-				return new Token(TokenType.AND, "&&", space + 2);
+			if((peek = peekString(TokenType.AND, space)) != null){
+				return peek;
 			}
 		case '|':
-			if(input.length() - space > 1 && input.charAt(space + 1) == '|'){
-				return new Token(TokenType.OR, "||", space + 2);
+			if((peek = peekString(TokenType.OR, space)) != null){
+				return peek;
+			}
+		case 't':
+			if((peek = peekString(TokenType.TRUE, space)) != null){
+				return peek;
+			}
+		case 'f':
+			if((peek = peekString(TokenType.FALSE, space)) != null){
+				return peek;
 			}
 		default: 
 			tokenBuilder.setLength(0);
 			int current = space;
-			if(Character.isDigit(first)){
+			if(Character.isDigit(input.charAt(current)) || input.charAt(current) == '-'){
 				tokenBuilder.append(first);
 				while(++current < input.length() && Character.isDigit(input.charAt(current))){
 					tokenBuilder.append(input.charAt(current));
 				}
-				return new Token(TokenType.NUMBER, tokenBuilder.toString(), space + tokenBuilder.length());
+				if(current < input.length() && input.charAt(current) == '.'){
+					while(++current < input.length() && Character.isDigit(input.charAt(current))){
+						tokenBuilder.append(input.charAt(current));
+					}
+					return new Token(TokenType.NUMBER, tokenBuilder.toString(), space + tokenBuilder.length());
+				} else{
+					return new Token(TokenType.INT, tokenBuilder.toString(), space + tokenBuilder.length());
+				}
+				
+				
 			} else if(Character.isJavaIdentifierStart(first)){
 				tokenBuilder.append(first);
 				while(++current < input.length() && (Character.isJavaIdentifierPart(input.charAt(current)))){
@@ -196,6 +215,18 @@ public class ClassifierParser {
 			}
 		}
 	}
+	
+	private Token peekString(TokenType type, int offset){
+		String s = type.description;
+		for(int i = 0 ; i < s.length() && i + offset < input.length() ; i++){
+			if(s.charAt(i) != input.charAt(offset + i)){
+				return null;
+			}
+		}
+		return new Token(type, s, offset + s.length());
+	}
+	
+	
 	
 	private Token accept(TokenType type) throws ParseException{
 		expect(type);
@@ -239,8 +270,11 @@ public class ClassifierParser {
 		AND("&&"),
 		OR("||"),
 		DOT("."),
+		TRUE("true"),
+		FALSE("false"),
 		IDENTIFIER("identifier"),
 		NUMBER("number"),
+		INT("int"),
 		STRING("string"),
 		EOF("eof")
 		;

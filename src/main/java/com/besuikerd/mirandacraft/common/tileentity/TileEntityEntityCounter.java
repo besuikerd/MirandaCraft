@@ -3,7 +3,7 @@ package com.besuikerd.mirandacraft.common.tileentity;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
+import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +21,8 @@ import com.besuikerd.mirandacraft.lib.classifier.ClassifierRule;
 import com.besuikerd.mirandacraft.lib.classifier.ParseException;
 import com.besuikerd.mirandacraft.lib.entity.filter.EntityFilterValidator;
 import com.besuikerd.mirandacraft.lib.entity.filter.EntityFilterVisitor;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Vector2D;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Vector3;
 
 public class TileEntityEntityCounter extends TileEntityMachine implements IClickListener, IRedstoneProvider{
 	
@@ -47,7 +49,7 @@ public class TileEntityEntityCounter extends TileEntityMachine implements IClick
 	public TileEntityEntityCounter() {
 		this.entityRules = new LinkedHashMap<String,ClassifierRule>();
 		this.range = 3;
-		this.tickDelay = 20;
+		this.tickDelay = 1;
 		this.rangeHeight = 3;
 		this.maxCount = 1;
 		this.rangeLimit = Config.entityCounterMaxRange;
@@ -58,6 +60,7 @@ public class TileEntityEntityCounter extends TileEntityMachine implements IClick
 	@Override
 	public void updateEntity() {
 		if(currentTick++ == tickDelay){
+			
 			currentTick = 0;
 			int count = 0;
 			AxisAlignedBB boundingBox = calculateBoundingBoxInFront(range, rangeHeight);
@@ -77,12 +80,30 @@ public class TileEntityEntityCounter extends TileEntityMachine implements IClick
 					}
 				}
 				if(pass){
+					
+					
+					/*
+
+					toying around with entity attractor
+					
+					Vector3 v1 = calculateCoordinateInFront();
+					Vector2D front = new Vector2D(v1.x + .5, v1.z + .5);
+					
+					double speed = 0.05;
+					
+					Vector2D flattened = front.flatten(new Vector2D(entity.posX, entity.posZ));
+					if(front.distance(new Vector2D(entity.posX, entity.posZ)) > 3){
+						entity.setVelocity(flattened.x * speed, 0, flattened.y * speed);
+					}
+					*/
+					
 					count++;
 				}
 			}
 			this.entitiesCounted = count;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			worldObj.notifyBlockChange(xCoord, yCoord, zCoord, getBlockType());
+			
 		}
 	}
 	
@@ -135,6 +156,10 @@ public class TileEntityEntityCounter extends TileEntityMachine implements IClick
 	
 	public EntityFilterVisitor getEntityFilterVisitor() {
 		return entityFilterVisitor;
+	}
+	
+	public int getEntitiesCounted() {
+		return entitiesCounted;
 	}
 
 	@Override

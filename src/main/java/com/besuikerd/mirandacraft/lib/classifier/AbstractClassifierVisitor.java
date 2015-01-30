@@ -57,6 +57,9 @@ public abstract class AbstractClassifierVisitor<A, B> implements ClassifierVisit
 		return null;
 	}
 
-	
-
+	@Override
+	public A visitArgumentBoolean(ClassifierVisitor<A, B> visitor,
+			ClassifierArgumentBoolean arg, B obj) {
+		return null;
+	}
 }

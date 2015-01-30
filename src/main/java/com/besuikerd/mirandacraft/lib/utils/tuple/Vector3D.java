@@ -5,7 +5,7 @@ public class Vector3D extends Tuple3<Double, Double, Double>{
 	public final double y;
 	public final double z;
 	
-	public Vector3D(Double _1, Double _2, Double _3) {
+	public Vector3D(double _1, double _2, double _3) {
 		super(_1, _2, _3);
 		this.x = _1;
 		this.y = _2;

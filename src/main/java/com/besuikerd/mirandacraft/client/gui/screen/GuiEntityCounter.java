@@ -1,7 +1,10 @@
 package com.besuikerd.mirandacraft.client.gui.screen;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.MathHelper;
 
 import org.lwjgl.util.Rectangle;
 
@@ -22,7 +25,12 @@ import com.besuikerd.mirandacraft.lib.classifier.ClassifierRule;
 import com.besuikerd.mirandacraft.lib.classifier.ParseException;
 import com.besuikerd.mirandacraft.lib.entity.filter.EntityFilterValidator;
 import com.besuikerd.mirandacraft.lib.utils.tuple.Vector2;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
+
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.EntityRegistry.EntityRegistration;
 
 public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter> implements ITextUpdatedListener{
 
@@ -101,18 +109,18 @@ public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter> 
 				String error = rule.visit(validator, null);
 				if(error != null){
 					buttonAdd.setEnabled(false);
-					buttonAdd.setTooltip(error);
+					setWarning(error);
 				} else{
 					buttonAdd.setEnabled(true);
 					buttonAdd.clearToolTip();
 				}
 			} catch(ParseException e){
 				buttonAdd.setEnabled(false);
-				buttonAdd.setTooltip(e.getMessage());
+				setWarning(e.getMessage());
 			}
 		}
 	}
-	
+		
 	@Override
 	public void update() {
 		//buttonAdd.setEnabled(!textField.getText().isEmpty() && !tile.getEntityRules().contains(textField.getText()));
@@ -122,6 +130,20 @@ public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter> 
 		checkboxIsAnalog.setChecked(tile.isAnalog());
 		checkboxIsAnalog.setTooltip(tile.isAnalog() ? "Set to digital mode" : "Set to analog mode");
 		list.setList(Lists.newArrayList(tile.getEntityRules().keySet()));
+		
+		labelCount.setTooltip("Currently: " + tile.getEntitiesCounted());
+	}
+	
+	private void setWarning(String msg){
+		buttonAdd.clearToolTip();
+		int size = 200;
+		int lines = MathHelper.ceiling_double_int(getFontRenderer().getStringWidth(msg) / (double)size);
+		int charsPerLine = msg.length() / lines;
+		System.out.println(String.format("String: %s, width: %d, lines: %d", msg, getFontRenderer().getStringWidth(msg), lines));
+		for(int i = 0 ; i < lines ; i++){
+			System.out.println(new Vector2(i * charsPerLine, Math.min((i + 1) * charsPerLine, msg.length())));
+			buttonAdd.addTooltip(msg.substring(i * charsPerLine, Math.min((i + 1) * charsPerLine, msg.length())));
+		}
 	}
 	
 	

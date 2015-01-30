@@ -10,6 +10,15 @@ public class Tuple2<A,B> {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Tuple2){
+			Tuple2 tuple = (Tuple2) obj;
+			return tuple._1.equals(_1) && tuple._2.equals(_2);
+		}
+		return false;
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("(%s, %s)", _1, _2);
 	}

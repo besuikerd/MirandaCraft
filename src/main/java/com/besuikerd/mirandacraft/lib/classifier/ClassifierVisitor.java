@@ -9,6 +9,6 @@ public interface ClassifierVisitor<A, B> {
 	A visitArgumentList(ClassifierVisitor<A, B> visitor, ClassifierArgumentList arg, B obj);
 	A visitArgumentString(ClassifierVisitor<A, B> visitor, ClassifierArgumentString arg, B obj);
 	A visitArgumentTuple(ClassifierVisitor<A, B> visitor, ClassifierArgumentTuple arg, B obj);
-	
+	A visitArgumentBoolean(ClassifierVisitor<A, B> visitor, ClassifierArgumentBoolean arg, B obj);
 	// A visit(ClassifierVisitor<A, B> visitor, , B obj);
 }

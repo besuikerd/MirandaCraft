@@ -28,7 +28,6 @@ public abstract class BlockMachine extends BlockBesu{
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int meta, float posX, float posY, float posZ) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		System.out.println("activated");
 		if(Wrenches.isWrench(player.getCurrentEquippedItem())){
 			if(!player.isSneaking() && tile instanceof IDirectioned){
 				IDirectioned dir = (IDirectioned) tile;

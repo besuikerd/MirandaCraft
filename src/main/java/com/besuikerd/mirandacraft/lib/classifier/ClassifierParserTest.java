@@ -1,6 +1,7 @@
 package com.besuikerd.mirandacraft.lib.classifier;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityCow;
 
@@ -17,9 +18,8 @@ public class ClassifierParserTest {
 	
 	public void run(){
 		Entity xp = new EntityXPOrb(null);
-		Entity cow = new EntityCow(null);
-		validateEntity("@xp[position=(1,2,3), size=(0,0,0, 2, 2.1, 3.1)]&&@p", cow);
-		
+		EntityCow cow = new EntityCow(null);
+		validateEntity("@xp[position=true]", cow);
 		System.out.println(parseSafe("@e[name=\"Bier\", int=293, tuple=(1,2,[])]"));
 	}
 	

@@ -11,6 +11,15 @@ public class Tuple3<A, B, C> {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Tuple3){
+			Tuple3 tuple = (Tuple3) obj;
+			return tuple._1.equals(_1) && tuple._2.equals(_2) && tuple._3.equals(_3);
+		}
+		return false;
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("(%s, %s, %s)", _1, _2, _3);
 	}

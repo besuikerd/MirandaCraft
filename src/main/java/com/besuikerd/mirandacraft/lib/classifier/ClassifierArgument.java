@@ -18,6 +18,8 @@ public abstract class ClassifierArgument<A> implements ClassifierVisitable{
 		ARGUMENT_TYPE_NAMES.put(ClassifierArgumentList.class, "List");
 		ARGUMENT_TYPE_NAMES.put(ClassifierArgumentString.class, "String");
 		ARGUMENT_TYPE_NAMES.put(ClassifierArgumentTuple.class, "Tuple");
+		ARGUMENT_TYPE_NAMES.put(ClassifierArgumentBoolean.class, "Boolean");
+		
 	}
 	
 	public ClassifierArgument(String name, A value, boolean equals) {
@@ -39,7 +41,7 @@ public abstract class ClassifierArgument<A> implements ClassifierVisitable{
 	}
 	
 	public String getTypeDescription(){
-		return ARGUMENT_TYPE_NAMES.get(getClass());
+		return ARGUMENT_TYPE_NAMES.containsKey(getClass()) ? ARGUMENT_TYPE_NAMES.get(getClass()) : getClass().getSimpleName().replace("ClassifierArgument", "");
 	}
 	
 	@Override

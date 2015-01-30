@@ -3,13 +3,11 @@ package com.besuikerd.mirandacraft.common.tileentity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.besuikerd.mirandacraft.common.block.BlockBesu;
 import com.besuikerd.mirandacraft.lib.utils.tuple.NBTUtils;
+import com.besuikerd.mirandacraft.lib.utils.tuple.Vector3;
 
 public abstract class TileEntityMachine extends TileEntityBesu implements IDirectioned, IDismantleable{
 
@@ -93,6 +91,21 @@ public abstract class TileEntityMachine extends TileEntityBesu implements IDirec
 			return calculateBoundingBoxAt(xCoord + .5, yCoord, zCoord + 1.5 + halfRange, range, height);
 		case WEST:
 			return calculateBoundingBoxAt(xCoord - halfRange - .5, yCoord, zCoord + .5, range, height);
+		default:
+			return null;
+		}
+	}
+	
+	protected Vector3 calculateCoordinateInFront(){
+		switch(ForgeDirection.values()[getDirection()]){
+		case NORTH:
+			return new Vector3(xCoord, yCoord, zCoord - 1);
+		case EAST:
+			return new Vector3(xCoord + 1, yCoord, zCoord);
+		case SOUTH:
+			return new Vector3(xCoord, yCoord, zCoord + 1);
+		case WEST:
+			return new Vector3(xCoord - 1, yCoord, zCoord);
 		default:
 			return null;
 		}
