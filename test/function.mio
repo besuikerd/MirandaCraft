@@ -1,0 +1,9 @@
+
+
+function bli(){
+    return bla()
+}
+
+function bla(){
+    return 12
+}

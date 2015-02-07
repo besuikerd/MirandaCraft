@@ -1,14 +1,14 @@
 package com.besuikerd.mirandacraft.lib.classifier;
 
-public interface ClassifierVisitor<A, B> {
-	A visitActualRule(ClassifierVisitor<A, B> visitor, ClassifierActualRule rule, B obj);
-	A visitAndRule(ClassifierVisitor<A,B> visitor, ClassifierAndRule rule, B obj);
-	A visitOrRule(ClassifierVisitor<A,B> visitor, ClassifierOrRule rule, B obj);
-	A visitArgumentDouble(ClassifierVisitor<A, B> visitor, ClassifierArgumentDouble arg, B obj);
-	A visitArgumentInt(ClassifierVisitor<A, B> visitor, ClassifierArgumentInt arg, B obj);
-	A visitArgumentList(ClassifierVisitor<A, B> visitor, ClassifierArgumentList arg, B obj);
-	A visitArgumentString(ClassifierVisitor<A, B> visitor, ClassifierArgumentString arg, B obj);
-	A visitArgumentTuple(ClassifierVisitor<A, B> visitor, ClassifierArgumentTuple arg, B obj);
-	A visitArgumentBoolean(ClassifierVisitor<A, B> visitor, ClassifierArgumentBoolean arg, B obj);
-	// A visit(ClassifierVisitor<A, B> visitor, , B obj);
+public interface ClassifierVisitor<ARG, RET>{
+	RET visit(ClassifierVisitor<ARG, RET> visitor, ARG obj);
+	RET visitActualRule(ClassifierVisitor<ARG, RET> visitor, ClassifierActualRule rule, ARG obj);
+	RET visitAndRule(ClassifierVisitor<ARG, RET> visitor, ClassifierAndRule rule, ARG obj);
+	RET visitOrRule(ClassifierVisitor<ARG, RET> visitor, ClassifierOrRule rule, ARG obj);
+	RET visitArgumentDouble(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentDouble arg, ARG obj);
+	RET visitArgumentInt(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentInt arg, ARG obj);
+	RET visitArgumentList(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentList arg, ARG obj);
+	RET visitArgumentString(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentString arg, ARG obj);
+	RET visitArgumentTuple(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentTuple arg, ARG obj);
+	RET visitArgumentBoolean(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentBoolean arg, ARG obj);
 }

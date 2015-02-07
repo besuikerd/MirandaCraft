@@ -107,6 +107,17 @@ public abstract class BlockBesu extends Block implements ITileEntityProvider {
 	}
 	
 	@Override
+	public boolean isOpaqueCube() {
+		return true;
+	}
+	
+	@Override
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z,
+			ForgeDirection side) {
+		return true;
+	}
+	
+	@Override
 	public boolean isNormalCube() {
 		return false;
 	}
@@ -115,6 +126,7 @@ public abstract class BlockBesu extends Block implements ITileEntityProvider {
 	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
 		if(canProvidePower()){
 			TileEntity tile = world.getTileEntity(x, y, z);
+			
 			if(tile != null && tile instanceof IRedstoneProvider){
 				return ((IRedstoneProvider) tile).getRedstoneStrength();
 			}

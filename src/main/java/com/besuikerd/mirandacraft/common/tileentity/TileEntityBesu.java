@@ -1,5 +1,7 @@
 package com.besuikerd.mirandacraft.common.tileentity;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -11,12 +13,15 @@ import net.minecraft.util.AxisAlignedBB;
 
 import com.besuikerd.mirandacraft.common.network.NetworkHandler;
 import com.besuikerd.mirandacraft.common.network.PacketTileEntity;
-import com.besuikerd.mirandacraft.lib.utils.tuple.Vector3;
 
 public abstract class TileEntityBesu extends TileEntity{
 	public void onTileEntityPlacedBy(EntityLivingBase entity, ItemStack stack){}
 	public void onRemoveTileEntity(Block block, int meta){}
 	public void onTileEntityRemoved(Block block, int meta){}
+	
+	protected Random random = new Random();
+	
+	private boolean initialized = false;
 	
 	@Override
 	public Packet getDescriptionPacket() {
@@ -27,6 +32,18 @@ public abstract class TileEntityBesu extends TileEntity{
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
 		readFromNBT(pkt.func_148857_g());
+	}
+	
+	@Override
+	public void updateEntity() {
+		if(!initialized){
+			initialized = true;
+			initialize();
+		}
+	}
+	
+	protected void initialize(){
+		
 	}
 	
 	protected AxisAlignedBB calculateBoundingBoxAt(double x, double y, double z, double rangeHorizontal, double rangeVertical){

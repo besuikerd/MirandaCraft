@@ -24,21 +24,21 @@ public class WidgetButton extends AbstractWidget{
 	
 	private IHasData<?> dataProvider;
 	
-	public WidgetButton(int identifier, IWidgetHandler gui, Rectangle bounds, IStatefulTexture texture, ITexture glyph) {
+	public WidgetButton(String identifier, IWidgetHandler gui, Rectangle bounds, IStatefulTexture texture, ITexture glyph) {
 		super(identifier, gui, bounds);
 		this.texture = texture;
 		this.glyph = glyph;
 	}
 	
-	public WidgetButton(int identifier, IWidgetHandler gui, Rectangle bounds, IStatefulTexture texture) {
+	public WidgetButton(String identifier, IWidgetHandler gui, Rectangle bounds, IStatefulTexture texture) {
 		this(identifier, gui, bounds, texture, null);
 	}
 	
-	public WidgetButton(int identifier, IWidgetHandler gui, Rectangle bounds, ITexture glyph) {
+	public WidgetButton(String identifier, IWidgetHandler gui, Rectangle bounds, ITexture glyph) {
 		this(identifier, gui, bounds, WidgetStatefulTextures.BUTTON, glyph);
 	}
 	
-	public WidgetButton(int identifier, IWidgetHandler gui, Rectangle bounds) {
+	public WidgetButton(String identifier, IWidgetHandler gui, Rectangle bounds) {
 		this(identifier, gui, bounds, (ITexture) null);
 	}
 	

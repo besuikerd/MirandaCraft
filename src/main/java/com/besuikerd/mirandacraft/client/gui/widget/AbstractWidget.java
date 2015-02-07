@@ -17,16 +17,16 @@ import com.besuikerd.mirandacraft.client.gui.texture.IStatefulTexture;
 import com.besuikerd.mirandacraft.lib.utils.tuple.Tuple2;
 
 public abstract class AbstractWidget implements IWidget{
-	private int identifier;
+	private String identifier;
 	protected Rectangle bounds;
 	protected IWidgetHandler gui;
 	protected List<Tuple2<EnumChatFormatting, String>> tooltip;
 	
-	public AbstractWidget(int identifier, IWidgetHandler gui, int x, int y, int width, int height){
+	public AbstractWidget(String identifier, IWidgetHandler gui, int x, int y, int width, int height){
 		this(identifier, gui, new Rectangle(x, y, width, height));
 	}
 	
-	public AbstractWidget(int identifier, IWidgetHandler gui, Rectangle bounds){
+	public AbstractWidget(String identifier, IWidgetHandler gui, Rectangle bounds){
 		this.gui = gui;
 		this.bounds = bounds;
 		this.identifier = identifier;
@@ -67,7 +67,7 @@ public abstract class AbstractWidget implements IWidget{
 	}
 	
 	@Override
-	public int getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 	

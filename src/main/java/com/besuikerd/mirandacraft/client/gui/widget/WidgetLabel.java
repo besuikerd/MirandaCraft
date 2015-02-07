@@ -10,13 +10,13 @@ public class WidgetLabel extends AbstractWidget implements IHasData<String>{
 	protected String text;
 	protected int color;
 	
-	public WidgetLabel(int identifier, IWidgetHandler gui, Rectangle bounds, String text) {
+	public WidgetLabel(String identifier, IWidgetHandler gui, Rectangle bounds, String text) {
 		super(identifier, gui, bounds);
 		this.text = text;
 		this.color = 0x404040;
 	}
 	
-	public WidgetLabel(int identifier, IWidgetHandler gui, Rectangle bounds) {
+	public WidgetLabel(String identifier, IWidgetHandler gui, Rectangle bounds) {
 		this(identifier, gui, bounds, "");
 	}
 	
@@ -50,7 +50,7 @@ public class WidgetLabel extends AbstractWidget implements IHasData<String>{
 		protected IWidget[] others;
 		protected int offset;
 		
-		public WidgetLabelPositioned(int identifier, IWidgetHandler gui, String text, IWidget... others) {
+		public WidgetLabelPositioned(String identifier, IWidgetHandler gui, String text, IWidget... others) {
 			super(identifier, gui, new Rectangle(0,0,0,0), text);
 			this.others = others;
 			this.offset = 3;
@@ -108,7 +108,7 @@ public class WidgetLabel extends AbstractWidget implements IHasData<String>{
 	}
 	
 	public static class Left extends WidgetLabelPositioned{
-		public Left(int identifier, IWidgetHandler gui, String text, IWidget... others) {
+		public Left(String identifier, IWidgetHandler gui, String text, IWidget... others) {
 			super(identifier, gui, text, others);
 		}
 		
@@ -125,7 +125,7 @@ public class WidgetLabel extends AbstractWidget implements IHasData<String>{
 	}
 	
 	public static class Right extends WidgetLabelPositioned{
-		public Right(int identifier, IWidgetHandler gui, String text, IWidget... others) {
+		public Right(String identifier, IWidgetHandler gui, String text, IWidget... others) {
 			super(identifier, gui, text, others);
 		}
 		

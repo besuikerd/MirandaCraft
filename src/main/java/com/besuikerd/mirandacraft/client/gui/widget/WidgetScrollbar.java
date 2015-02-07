@@ -19,7 +19,7 @@ public class WidgetScrollbar extends AbstractWidget{
 	
 	protected int sliderHeight;
 
-	public WidgetScrollbar(int identifier, IWidgetHandler gui, Rectangle bounds, ScrollbarCompanion companion, IStatefulTexture texture) {
+	public WidgetScrollbar(String identifier, IWidgetHandler gui, Rectangle bounds, ScrollbarCompanion companion, IStatefulTexture texture) {
 		super(identifier, gui, bounds);
 		this.companion = companion;
 		this.texture = texture;
@@ -27,7 +27,7 @@ public class WidgetScrollbar extends AbstractWidget{
 		this.sliderHeight = texture.normal().getHeight();
 	}
 	
-	public WidgetScrollbar(int identifier, IWidgetHandler gui, Rectangle bounds, ScrollbarCompanion companion) {
+	public WidgetScrollbar(String identifier, IWidgetHandler gui, Rectangle bounds, ScrollbarCompanion companion) {
 		this(identifier, gui, bounds, companion, WidgetStatefulTextures.SCROLLER);
 	}
 	

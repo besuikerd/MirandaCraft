@@ -21,7 +21,7 @@ public class WidgetTextField extends AbstractWidget implements IHasData<String>{
 	
 	protected int color = 0xe0e0e0;
 	
-	public WidgetTextField(int identifier, IWidgetHandler gui, Rectangle bounds) {
+	public WidgetTextField(String identifier, IWidgetHandler gui, Rectangle bounds) {
 		super(identifier, gui, bounds);
 		this.text = new StringBuilder();
 	}

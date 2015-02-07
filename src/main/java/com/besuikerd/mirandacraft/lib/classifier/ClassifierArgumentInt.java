@@ -7,7 +7,7 @@ public class ClassifierArgumentInt extends ClassifierArgumentNumber<Integer>{
 	}
 	
 	@Override
-	public <A, B> A visit(ClassifierVisitor<A, B> visitor, B obj) {
+	public <ARG, RET> RET visit(ClassifierVisitor<ARG, RET> visitor, ARG obj) {
 		return visitor.visitArgumentInt(visitor, this, obj);
 	}
 }

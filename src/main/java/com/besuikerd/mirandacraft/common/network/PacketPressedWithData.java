@@ -8,7 +8,7 @@ public class PacketPressedWithData extends PacketPressed<PacketPressedWithData>{
 	public PacketPressedWithData() {
 	}
 
-	public PacketPressedWithData(Object data, int button, int widgetId,  int x, int y,
+	public PacketPressedWithData(Object data, int button, String widgetId,  int x, int y,
 			int z) {
 		super(button, widgetId, x, y, z);
 		this.data = data;

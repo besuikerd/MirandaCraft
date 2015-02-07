@@ -9,6 +9,7 @@ public abstract class ClassifierArgument<A> implements ClassifierVisitable{
 	protected boolean equals;
 	protected A value;
 	
+	
 	public static final Map<Class<? extends ClassifierArgument>, String> ARGUMENT_TYPE_NAMES;
 	static{
 		ARGUMENT_TYPE_NAMES = new HashMap<Class<? extends ClassifierArgument>, String>();

@@ -22,12 +22,12 @@ public class WidgetList extends AbstractWidget implements ScrollbarCompanion, IH
 	
 	protected int selectedItem = -1;
 	
-	public WidgetList(int identifier, IWidgetHandler gui, Rectangle bounds, List<?> items) {
+	public WidgetList(String identifier, IWidgetHandler gui, Rectangle bounds, List<?> items) {
 		super(identifier, gui, bounds);
 		this.items = items;
 	}
 	
-	public WidgetList(int identifier, IWidgetHandler gui, Rectangle bounds) {
+	public WidgetList(String identifier, IWidgetHandler gui, Rectangle bounds) {
 		this(identifier, gui, bounds, Collections.EMPTY_LIST);
 	}
 	

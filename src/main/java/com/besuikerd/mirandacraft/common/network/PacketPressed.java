@@ -21,7 +21,7 @@ public class PacketPressed<E extends PacketPressed> extends PacketWidget<E>{
 	public PacketPressed() {
 	}
 	
-	public PacketPressed(int button, int widgetId, int x, int y, int z) {
+	public PacketPressed(int button, String widgetId, int x, int y, int z) {
 		super(widgetId, x, y, z);
 		this.button = button;
 	}

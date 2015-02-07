@@ -22,7 +22,7 @@ import com.besuikerd.mirandacraft.common.tileentity.IHasTileEntity;
 import com.besuikerd.mirandacraft.lib.utils.tuple.Tuple2;
 
 public abstract class GuiContainerBesu<A extends TileEntity> extends GuiContainer implements IWidgetHandler, IHasTileEntity{
-	private Map<Integer, IWidget> widgets;
+	private Map<String, IWidget> widgets;
 	
 	protected IWidget focus;
 	
@@ -36,11 +36,18 @@ public abstract class GuiContainerBesu<A extends TileEntity> extends GuiContaine
 	
 	protected String title;
 	
+	protected int widgetIdGenerator;
+	
 	public GuiContainerBesu(Container container, A tile, EntityPlayer player) {
 		super(container);
 		this.tile = tile;
 		this.player = player;
-		this.widgets = new LinkedHashMap<Integer, IWidget>();
+		this.widgets = new LinkedHashMap<String, IWidget>();
+		initWidgets();
+	}
+	
+	public void initWidgets(){
+		
 	}
 	
 	protected int mouseX(){
@@ -180,6 +187,9 @@ public abstract class GuiContainerBesu<A extends TileEntity> extends GuiContaine
 	}
 
 
+	protected String generateId(){
+		return "" + widgetIdGenerator++;
+	}
 
 	@Override
 	public void releaseFocus(IWidget widget) {

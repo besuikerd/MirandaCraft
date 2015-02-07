@@ -10,7 +10,7 @@ import com.besuikerd.mirandacraft.client.gui.MouseButton;
 import com.besuikerd.mirandacraft.lib.utils.tuple.Tuple2;
 
 public interface IWidget {
-	public int getIdentifier();
+	public String getIdentifier();
 	public Rectangle getBounds();
 	public void draw();
 	public List<Tuple2<EnumChatFormatting, String>> getTooltip();

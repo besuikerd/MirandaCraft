@@ -1,26 +1,28 @@
 package com.besuikerd.mirandacraft.lib.classifier;
 
-public abstract class AbstractClassifierVisitor<A, B> implements ClassifierVisitor<A, B>{
+public abstract class AbstractClassifierVisitor<ARG, RET> implements ClassifierVisitor<ARG, RET>{
 	
 	@Override
-	public A visitAndRule(ClassifierVisitor<A, B> visitor,
-			ClassifierAndRule rule, B obj) {
+	public RET visit(ClassifierVisitor<ARG, RET> visitor, ARG obj) {
+		return null;
+	}
+	
+	@Override
+	public RET visitAndRule(ClassifierVisitor<ARG, RET> visitor, ClassifierAndRule rule, ARG obj) {
 		rule.getLhs().visit(visitor, obj);
 		rule.getRhs().visit(visitor, obj);
 		return null;
 	}
 	
 	@Override
-	public A visitOrRule(ClassifierVisitor<A, B> visitor,
-			ClassifierOrRule rule, B obj) {
+	public RET visitOrRule(ClassifierVisitor<ARG, RET> visitor, ClassifierOrRule rule, ARG obj) {
 		rule.getLhs().visit(visitor, obj);
 		rule.getRhs().visit(visitor, obj);
 		return null;
 	}
 
 	@Override
-	public A visitActualRule(ClassifierVisitor<A, B> visitor, ClassifierActualRule rule,
-			B obj) {
+	public RET visitActualRule(ClassifierVisitor<ARG, RET> visitor, ClassifierActualRule rule, ARG obj) {
 		for(ClassifierArgument<?> arg : rule.getArguments().values()){
 			arg.visit(visitor, obj);
 		}
@@ -28,38 +30,32 @@ public abstract class AbstractClassifierVisitor<A, B> implements ClassifierVisit
 	}
 	
 	@Override
-	public A visitArgumentDouble(ClassifierVisitor<A, B> visitor,
-			ClassifierArgumentDouble arg, B obj) {
+	public RET visitArgumentDouble(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentDouble arg, ARG obj) {
 		return null;
 	}
 
 	@Override
-	public A visitArgumentInt(ClassifierVisitor<A, B> visitor,
-			ClassifierArgumentInt arg, B obj) {
+	public RET visitArgumentInt(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentInt arg, ARG obj) {
 		return null;
 	}
 
 	@Override
-	public A visitArgumentList(ClassifierVisitor<A, B> visitor,
-			ClassifierArgumentList arg, B obj) {
+	public RET visitArgumentList(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentList arg, ARG obj) {
 		return null;
 	}
 
 	@Override
-	public A visitArgumentString(ClassifierVisitor<A, B> visitor,
-			ClassifierArgumentString arg, B obj) {
+	public RET visitArgumentString(ClassifierVisitor<ARG, RET> visitor,	ClassifierArgumentString arg, ARG obj) {
 		return null;
 	}
 
 	@Override
-	public A visitArgumentTuple(ClassifierVisitor<A, B> visitor,
-			ClassifierArgumentTuple arg, B obj) {
+	public RET visitArgumentTuple(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentTuple arg, ARG obj) {
 		return null;
 	}
 
 	@Override
-	public A visitArgumentBoolean(ClassifierVisitor<A, B> visitor,
-			ClassifierArgumentBoolean arg, B obj) {
+	public RET visitArgumentBoolean(ClassifierVisitor<ARG, RET> visitor, ClassifierArgumentBoolean arg, ARG obj) {
 		return null;
 	}
 }

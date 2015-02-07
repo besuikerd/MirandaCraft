@@ -26,9 +26,6 @@ public class Wrenches {
 	}
 	
 	public static boolean isWrench(ItemStack item){
-		if(item != null){
-			System.out.println(item.getUnlocalizedName());
-		}
 		return item != null && wrenches.contains(item.getUnlocalizedName().substring("item.".length()));
 	}
 }

@@ -22,6 +22,7 @@ import com.besuikerd.mirandacraft.client.gui.widget.WidgetTextField;
 import com.besuikerd.mirandacraft.common.tileentity.TileEntityEntityCounter;
 import com.besuikerd.mirandacraft.lib.classifier.ClassifierParser;
 import com.besuikerd.mirandacraft.lib.classifier.ClassifierRule;
+import com.besuikerd.mirandacraft.lib.classifier.ClassifierVisitor;
 import com.besuikerd.mirandacraft.lib.classifier.ParseException;
 import com.besuikerd.mirandacraft.lib.entity.filter.EntityFilterValidator;
 import com.besuikerd.mirandacraft.lib.utils.tuple.Vector2;
@@ -32,134 +33,52 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry.EntityRegistration;
 
-public class GuiEntityCounter extends GuiContainerBesu<TileEntityEntityCounter> implements ITextUpdatedListener{
-
-	private WidgetButton buttonAdd;
-	private WidgetButton buttonRemove;
-	private WidgetTextField textField;
-	private WidgetList list;
-	private WidgetScrollbar scrollbar;
-	private WidgetLabel labelRange;
+public class GuiEntityCounter extends GuiEntityScanner<TileEntityEntityCounter>{
+	
 	private WidgetLabel labelCount;
-	private WidgetButton buttonIncreaseRange;
-	private WidgetButton buttonDecreaseRange;
 	private WidgetButton buttonIncreaseCount;
 	private WidgetButton buttonDecreaseCount;
 	private WidgetCheckbox checkboxIsAnalog;
 	
-	private EntityFilterValidator validator;
+	private ClassifierVisitor<String, Void> validator;
 	private ClassifierParser classifierParser = new ClassifierParser();
 	
-	public enum Widgets{
-		BUTTON_ADD,
-		BUTTON_REMOVE,
-		BUTTON_INCREASE_RANGE,
-		BUTTON_DECREASE_RANGE,
-		BUTTON_INCREASE_COUNT,
-		BUTTON_DECREASE_COUNT,
-		CHECKBOX_IS_ANALOG,
-		TEXTFIELD,
-		LIST,
-		SCROLLBAR,
-		LABEL_RANGE,
-		LABEL_COUNT
-		;
-	}
+	public static final String ACTION_COUNT_INC = "inc_count";
+	public static final String ACTION_COUNT_DEC = "dec_count";
+	public static final String ACTION_IS_ANALOG = "isAnalog";
+	
+	public static final Rectangle RECT_BUTTON_COUNT_INC = new Rectangle(157, 24, 12, 7);
+	public static final Rectangle RECT_BUTTON_COUNT_DEC = new Rectangle(157, 31, 12, 7);
+	public static final Rectangle RECT_CHECKBOX_IS_ANALOG = new Rectangle(79, 21, 18, 18);
+	
 	
 	public GuiEntityCounter(Container container, TileEntityEntityCounter tile,
 			EntityPlayer player) {
 		super(container, tile, player);
-		this.xSize = 186;
-		this.ySize = 125;
-		this.validator = new EntityFilterValidator(tile.getEntityFilterVisitor());
+		this.xSize = 176;
+		this.ySize = 138;
 		this.background = TextureLocation.GUI_ENTITY_COUNTER;
 		this.title = "Entity Counter";
-		initWidgets();
 	}
 	
-	private void initWidgets(){
-		this.buttonAdd = addWidget(new WidgetButton(Widgets.BUTTON_ADD.ordinal(), this, RECT_BUTTON_ADD, Glyph.PLUS));
-		buttonAdd.setEnabled(false);
-		this.buttonRemove = addWidget(new WidgetButton(Widgets.BUTTON_REMOVE.ordinal(), this, RECT_BUTTON_REMOVE, Glyph.MINUS));
-		this.textField = addWidget(new WidgetTextField(Widgets.TEXTFIELD.ordinal(), this, RECT_TEXTFIELD));
-		this.list = addWidget(new WidgetList(Widgets.LIST.ordinal(), this, RECT_LIST));
-		this.scrollbar = addWidget(new WidgetScrollbar(Widgets.SCROLLBAR.ordinal(), this, RECT_SCROLL, list));
-		
-		this.buttonIncreaseRange = addWidget(new WidgetButton(Widgets.BUTTON_INCREASE_RANGE.ordinal(), this, RECT_BUTTON_RANGE_INC, WidgetStatefulTextures.BUTTON_SMALL, Glyph.ARROW_UP));
-		this.buttonDecreaseRange = addWidget(new WidgetButton(Widgets.BUTTON_DECREASE_RANGE.ordinal(), this, RECT_BUTTON_RANGE_DEC, WidgetStatefulTextures.BUTTON_SMALL, Glyph.ARROW_DOWN));
-		
-		this.buttonIncreaseCount = addWidget(new WidgetButton(Widgets.BUTTON_INCREASE_COUNT.ordinal(), this, RECT_BUTTON_COUNT_INC, WidgetStatefulTextures.BUTTON_SMALL, Glyph.ARROW_UP));
-		this.buttonDecreaseCount = addWidget(new WidgetButton(Widgets.BUTTON_DECREASE_COUNT.ordinal(), this, RECT_BUTTON_COUNT_DEC, WidgetStatefulTextures.BUTTON_SMALL, Glyph.ARROW_DOWN));
-		
-		this.labelRange = addWidget(new WidgetLabel.Right(Widgets.LABEL_RANGE.ordinal(), this,  "", buttonIncreaseRange, buttonDecreaseRange));
-		this.labelCount = addWidget(new WidgetLabel.Left(Widgets.LABEL_COUNT.ordinal(), this, "", buttonIncreaseCount, buttonDecreaseCount));
-		
-		this.checkboxIsAnalog = addWidget(new WidgetCheckbox(Widgets.CHECKBOX_IS_ANALOG.ordinal(), this, POS_CHECKBOX_IS_ANALOG._1, POS_CHECKBOX_IS_ANALOG._2));
+	public void initWidgets(){
+		super.initWidgets();
+		this.buttonIncreaseCount = addWidget(new WidgetButton(ACTION_COUNT_INC, this, RECT_BUTTON_COUNT_INC, WidgetStatefulTextures.BUTTON_SMALL, Glyph.ARROW_UP));
+		this.buttonDecreaseCount = addWidget(new WidgetButton(ACTION_COUNT_DEC, this, RECT_BUTTON_COUNT_DEC, WidgetStatefulTextures.BUTTON_SMALL, Glyph.ARROW_DOWN));
+		this.checkboxIsAnalog = addWidget(new WidgetCheckbox(ACTION_IS_ANALOG, this, RECT_CHECKBOX_IS_ANALOG, WidgetStatefulTextures.BUTTON_ICON, Glyph.REDSTONE_TORCH_ON, Glyph.REDSTONE_DUST));
+		this.labelCount = addWidget(new WidgetLabel.Left(generateId(), this, "", buttonIncreaseCount, buttonDecreaseCount));
 		checkboxIsAnalog.addTooltip("Is Analog");
-		
-		buttonAdd.setDataProvider(textField);
-		buttonRemove.setDataProvider(list);
 	}
-	
-	@Override
-	public void onTextUpdated(int widgetId, String text) {
-		if(widgetId == textField.getIdentifier()){
-			try{
-				ClassifierRule rule = classifierParser.parse(text);
-				String error = rule.visit(validator, null);
-				if(error != null){
-					buttonAdd.setEnabled(false);
-					setWarning(error);
-				} else{
-					buttonAdd.setEnabled(true);
-					buttonAdd.clearToolTip();
-				}
-			} catch(ParseException e){
-				buttonAdd.setEnabled(false);
-				setWarning(e.getMessage());
-			}
-		}
-	}
-		
 	@Override
 	public void update() {
-		//buttonAdd.setEnabled(!textField.getText().isEmpty() && !tile.getEntityRules().contains(textField.getText()));
-		buttonRemove.setEnabled(!tile.getEntityRules().isEmpty() && list.getSelectedItemIndex() != -1);
-		labelRange.setText("Range: " + tile.getRange());
-		labelCount.setText("Max Count: " + tile.getMaxCount());
+		super.update();
+		labelCount.setText("Count: " + tile.getMaxCount());
+		labelCount.setTooltip("Currently: " + tile.getEntitiesCounted());
 		checkboxIsAnalog.setChecked(tile.isAnalog());
 		checkboxIsAnalog.setTooltip(tile.isAnalog() ? "Set to digital mode" : "Set to analog mode");
-		list.setList(Lists.newArrayList(tile.getEntityRules().keySet()));
-		
-		labelCount.setTooltip("Currently: " + tile.getEntitiesCounted());
-	}
-	
-	private void setWarning(String msg){
-		buttonAdd.clearToolTip();
-		int size = 200;
-		int lines = MathHelper.ceiling_double_int(getFontRenderer().getStringWidth(msg) / (double)size);
-		int charsPerLine = msg.length() / lines;
-		System.out.println(String.format("String: %s, width: %d, lines: %d", msg, getFontRenderer().getStringWidth(msg), lines));
-		for(int i = 0 ; i < lines ; i++){
-			System.out.println(new Vector2(i * charsPerLine, Math.min((i + 1) * charsPerLine, msg.length())));
-			buttonAdd.addTooltip(msg.substring(i * charsPerLine, Math.min((i + 1) * charsPerLine, msg.length())));
-		}
 	}
 	
 	
-	private static final Rectangle RECT_BUTTON_ADD = new Rectangle(155, 32, 12, 12);
-	private static final Rectangle RECT_BUTTON_REMOVE = new Rectangle(169, 32, 12, 12);
 	
-	private static final Rectangle RECT_BUTTON_RANGE_INC = new Rectangle(4, 16, 12, 7);
-	private static final Rectangle RECT_BUTTON_RANGE_DEC = new Rectangle(4, 23, 12, 7);
-	
-	private static final Rectangle RECT_BUTTON_COUNT_INC = new Rectangle(169, 16, 12, 7);
-	private static final Rectangle RECT_BUTTON_COUNT_DEC = new Rectangle(169, 23, 12, 7);
-	
-	private static final Rectangle RECT_TEXTFIELD = new Rectangle(4, 32, 149, 12);
-	private static final Rectangle RECT_LIST = new Rectangle(4, 46, 163, 74);
-	private static final Rectangle RECT_SCROLL = new Rectangle(169, 46, 12, 74);
-	
-	private static final Vector2 POS_CHECKBOX_IS_ANALOG = new Vector2(169, 3);
 	
 }

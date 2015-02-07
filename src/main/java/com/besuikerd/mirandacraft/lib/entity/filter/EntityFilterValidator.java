@@ -9,7 +9,7 @@ import com.besuikerd.mirandacraft.lib.classifier.ClassifierArgument;
 import com.besuikerd.mirandacraft.lib.classifier.ClassifierOrRule;
 import com.besuikerd.mirandacraft.lib.classifier.ClassifierVisitor;
 
-public class EntityFilterValidator extends AbstractClassifierVisitor<String, Void>{
+public class EntityFilterValidator extends AbstractClassifierVisitor<Void, String>{
 	private EntityFilterVisitor filterVisitor;
 
 	public EntityFilterValidator(EntityFilterVisitor filterVisitor) {
@@ -17,8 +17,7 @@ public class EntityFilterValidator extends AbstractClassifierVisitor<String, Voi
 	}
 	
 	@Override
-	public String visitAndRule(ClassifierVisitor<String, Void> visitor,
-			ClassifierAndRule rule, Void obj) {
+	public String visitAndRule(ClassifierVisitor<Void, String> visitor, ClassifierAndRule rule, Void obj) {
 		String lhs = rule.getLhs().visit(visitor, obj);
 		if(lhs == null){
 			return rule.getRhs().visit(visitor, obj);
@@ -27,8 +26,7 @@ public class EntityFilterValidator extends AbstractClassifierVisitor<String, Voi
 	}
 	
 	@Override
-	public String visitOrRule(ClassifierVisitor<String, Void> visitor,
-			ClassifierOrRule rule, Void obj) {
+	public String visitOrRule(ClassifierVisitor<Void, String> visitor, ClassifierOrRule rule, Void obj) {
 		String lhs = rule.getLhs().visit(visitor, obj);
 		if(lhs == null){
 			return rule.getRhs().visit(visitor, obj);
@@ -37,8 +35,7 @@ public class EntityFilterValidator extends AbstractClassifierVisitor<String, Voi
 	}
 	
 	@Override
-	public String visitActualRule(ClassifierVisitor<String, Void> visitor,
-			ClassifierActualRule rule, Void obj) {
+	public String visitActualRule(ClassifierVisitor<Void, String> visitor, ClassifierActualRule rule, Void obj) {
 		if(!filterVisitor.getTypes().containsKey(rule.getType())) {
 			return String.format("[@%s]: Unknown entity type", rule.getType());
 		}

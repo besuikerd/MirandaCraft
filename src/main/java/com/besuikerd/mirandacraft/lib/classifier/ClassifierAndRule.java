@@ -11,7 +11,7 @@ public class ClassifierAndRule extends ClassifierRule implements ClassifierVisit
 	}
 
 	@Override
-	public <A, B> A visit(ClassifierVisitor<A, B> visitor, B obj) {
+	public <ARG, RET> RET visit(ClassifierVisitor<ARG, RET> visitor, ARG obj) {
 		return visitor.visitAndRule(visitor, this, obj);
 	}
 

@@ -10,7 +10,17 @@ public enum Glyph implements ITexture{
 	ARROW_UP(12,0,6,3),
 	ARROW_DOWN(18,0,6,3),
 	CHECKED(24, 0, 8, 8),
-	UNCHECKED(32, 0, 8, 8)
+	UNCHECKED(32, 0, 8, 8),
+	
+	REDSTONE_DUST(40, 0, 16, 16),
+	GUNPOWDER(56, 0, 16, 16),
+	REDSTONE_TORCH_ON(72, 0, 16, 16),
+	REDSTONE_TORCH_OFF(88, 0, 16, 16),
+	
+	MOUSE_LEFT(104, 0, 16, 16),
+	MOUSE_RIGHT(120, 0, 16, 16),
+	SNEAK(136, 0, 16, 16),
+	NOT_SNEAK(152, 0, 16, 16)
 	;
 	
 	

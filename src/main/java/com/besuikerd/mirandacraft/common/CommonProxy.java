@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import com.besuikerd.mirandacraft.common.block.MirandaBlocks;
 import com.besuikerd.mirandacraft.common.tileentity.TileEntityEntityCounter;
+import com.besuikerd.mirandacraft.common.tileentity.TileEntityEntityInteractor;
 import com.besuikerd.mirandacraft.common.tileentity.TileEntityShield;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -16,7 +17,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class CommonProxy {
 	public void registerBlocks(){
 		register(MirandaBlocks.entityCounter);
-		//register(Blocks.shield);
+		register(MirandaBlocks.entityInteracter);
 	}
 	
 	public void registerItems(){
@@ -25,6 +26,7 @@ public class CommonProxy {
 	
 	public void registerTileEntities(){
 		register(TileEntityEntityCounter.class);
+		register(TileEntityEntityInteractor.class);
 		//register(TileEntityShield.class);
 	}
 	

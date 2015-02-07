@@ -6,6 +6,7 @@ import com.besuikerd.mirandacraft.common.tileentity.IDismantleable;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,9 +20,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public abstract class BlockMachine extends BlockBesu{
 
 	protected BlockMachine() {
-		super(Material.piston);
+		super(new Material(MapColor.grayColor));
 		setHardness(1.5f);
-		
 	}
 
 	@Override

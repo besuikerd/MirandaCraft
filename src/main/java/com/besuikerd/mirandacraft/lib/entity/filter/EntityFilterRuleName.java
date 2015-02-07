@@ -22,8 +22,6 @@ public class EntityFilterRuleName extends AbstractEntityFilterRule<ClassifierArg
 	}
 	
 	private boolean match(String name, String match){
-		System.out.println(name);
-		
 		return name.matches(match) || name.toLowerCase().equals(match.toLowerCase());
 	}
 }

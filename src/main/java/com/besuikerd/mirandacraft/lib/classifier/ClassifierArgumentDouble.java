@@ -7,7 +7,7 @@ public class ClassifierArgumentDouble extends ClassifierArgumentNumber<Double>{
 	}
 
 	@Override
-	public <A, B> A visit(ClassifierVisitor<A, B> visitor, B obj) {
+	public <ARG, RET> RET visit(ClassifierVisitor<ARG, RET> visitor, ARG obj) {
 		return visitor.visitArgumentDouble(visitor, this, obj);
 	}
 }

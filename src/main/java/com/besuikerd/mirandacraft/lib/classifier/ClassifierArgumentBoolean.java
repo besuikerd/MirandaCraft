@@ -7,7 +7,7 @@ public class ClassifierArgumentBoolean extends ClassifierArgument<Boolean>{
 	}
 
 	@Override
-	public <A, B> A visit(ClassifierVisitor<A, B> visitor, B obj) {
+	public <ARG, RET> RET visit(ClassifierVisitor<ARG, RET> visitor, ARG obj) {
 		return visitor.visitArgumentBoolean(visitor, this, obj);
 	}
 

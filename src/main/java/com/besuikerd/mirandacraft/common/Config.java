@@ -10,6 +10,10 @@ public class Config {
 	
 	public static int entityCounterMaxRange;
 	public static int entityCounterMaxCount;
+	public static int entityCounterTickDelay;
+	
+	public static int entityInteractorTickDelay;
+	public static int entityInteractorMaxRange;
 	
 	public static void init(File file){
 		Configuration config = new Configuration(file);
@@ -30,6 +34,11 @@ public class Config {
 		
 		entityCounterMaxRange = config.getInt("Maximum Range", "machine.EntityCounter", 63, 0, Integer.MAX_VALUE, "");
 		entityCounterMaxCount = config.getInt("Maximum Count", "machine.EntityCounter", 500, 0, Integer.MAX_VALUE, "");
+		entityCounterTickDelay = config.getInt("Tick Delay", "machine.EntityCounter", 10, 1, Integer.MAX_VALUE, "");
+		
+		entityInteractorMaxRange = config.getInt("Maximum Range", "machine.EntityInteractor", 9, 1, Integer.MAX_VALUE, "");
+		entityInteractorTickDelay = config.getInt("Tick Delay", "machine.EntityInteractor", 20, 1, Integer.MAX_VALUE, "");
+		
 		
 		config.save();
 	}

@@ -18,7 +18,5 @@ public class VectorTest {
 		
 		
 		Vector2D v3 = v1.flatten(v2);
-		
-		System.out.println(new Vector2D(v3.x * v1.distance(v2), v3.y * v1.distance(v2)));
 	}
 }

@@ -15,7 +15,7 @@ public class PacketUpdateText extends PacketWidget<PacketUpdateText>{
 	public PacketUpdateText() {
 	}
 
-	public PacketUpdateText(String text, int widgetId, int x, int y, int z) {
+	public PacketUpdateText(String text, String widgetId, int x, int y, int z) {
 		super(widgetId, x, y, z);
 		this.text = text;
 	}
