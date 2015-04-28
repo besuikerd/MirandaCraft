@@ -96,14 +96,15 @@ public abstract class TileEntityEntityScanner extends TileEntityMachine implemen
 			
 			List<Entity> entities = (List<Entity>) worldObj.getEntitiesWithinAABB(Entity.class, boundingBox);
 			for(Entity entity : entities){
-				boolean pass = filterVisitor.visit(filterVisitor, entity);
-				for(ClassifierRule rule : entityRules.values()){
-					if(rule.visit(filterVisitor, entity)){
-						pass = true;
-						break;
+				
+				if(filterVisitor.visit(filterVisitor, entity)){
+					boolean pass = entityRules.isEmpty();
+					for(ClassifierRule rule : entityRules.values()){
+						if(rule.visit(filterVisitor, entity)){
+							pass = true;
+							break;
+						}
 					}
-				}
-				if(pass){
 					/*
 					toying around with entity attractor
 					
@@ -117,8 +118,11 @@ public abstract class TileEntityEntityScanner extends TileEntityMachine implemen
 						entity.setVelocity(flattened.x * speed, 0, flattened.y * speed);
 					}
 					*/
-					entityList.add(entity);
-					changed = onEntityFound(entity) || changed;
+					if(pass){
+						entityList.add(entity);
+						changed = onEntityFound(entity) || changed;
+					}
+					
 				}
 			}
 			changed = onPostScan(entityList) || changed;

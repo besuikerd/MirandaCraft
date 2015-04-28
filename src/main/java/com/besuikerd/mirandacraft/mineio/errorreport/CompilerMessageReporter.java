@@ -46,16 +46,44 @@ public class CompilerMessageReporter {
 	}
 	
 	public class ErrorMessages{
-		public void invalidScopeClose(ParserRuleContext ctx, String message){
-			error(ctx, "Unable to close scope: %s", message);
+		public void invalidScopeClose(ParserRuleContext ctx){
+			error(ctx, "Unable to close scope");
+		}
+		
+		public void invalidScopeOnEnter(ParserRuleContext ctx, String name){
+			error(ctx, "Could not add %s: invalid scope", name);
+		}
+		
+		public void duplicateVariableDeclaration(ParserRuleContext ctx, String name){
+			error(ctx, "\"%s\" has been declared twice", name);
 		}
 		
 		public void wrongType(ParserRuleContext ctx, Type expected, Type actual){
-			error(ctx, "Expected type: %s, actual type: %s", expected.getDescription(), actual.getDescription());
+			error(ctx, "Invalid type, expected type: %s, actual type: %s", expected.getDescription(), actual.getDescription());
 		}
 		
 		public void wrongReturnType(ParserRuleContext ctx, Type expected, Type actual){
 			error(ctx, "All return types should have the same type, expected type: %s, actual type: %s", expected.getDescription(), actual.getDescription());
+		}
+		
+		public void wrongPredicateType(ParserRuleContext ctx, Type actual){
+			error(ctx, "Condition type should be boolean, got: %s", actual.getDescription());
+		}
+		
+		public void wrongIterationType(ParserRuleContext ctx, Type actual){
+			error(ctx, "Cannot loop over an expression of type %s", actual.getDescription());
+		}
+		
+		public void unreachableCode(ParserRuleContext ctx){
+			error(ctx, "Unreachable code");
+		}
+		
+		public void missingReturnStatement(ParserRuleContext ctx){
+			error(ctx, "Code path does not return a value");
+		}
+		
+		public void notAlwaysReturns(ParserRuleContext ctx){
+			error(ctx, "Code path does not always return a value");
 		}
 	}
 	

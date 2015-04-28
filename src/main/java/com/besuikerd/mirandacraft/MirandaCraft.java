@@ -37,13 +37,5 @@ public class MirandaCraft {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 		NetworkHandler.getInstance().init();
 		
-		
-		try{
-			MineIOLexer lexer = new MineIOLexer(new ANTLRInputStream("int x = 5"));
-			MineIOParser parser = new MineIOParser(new CommonTokenStream(lexer));
-			ProgramContext program = parser.program();
-		} catch(RecognitionException ex){
-			ex.printStackTrace();
-		}
 	}
 }

@@ -3,8 +3,8 @@ package com.besuikerd.mirandacraft.mineio.types;
 public class ArrayType extends Type {
 	protected Type innerType;
 	
-	public ArrayType(String value, Type innerType) {
-		super(TypeKind.ARRAY, value);
+	public ArrayType(Type innerType) {
+		super(TypeKind.ARRAY);
 		this.innerType = innerType;
 	}
 	

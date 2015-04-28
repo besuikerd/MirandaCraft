@@ -73,6 +73,9 @@ public class TileEntityEntityInteractor extends TileEntityEntityScanner implemen
 	
 	@Override
 	public boolean onPostScan(List<Entity> entityList) {
+		//System.out.println(String.format("found %d entities", entityList.size()));
+		
+		
 		if(!worldObj.isRemote && !entityList.isEmpty()){
 			EntityLivingBase entity = (EntityLivingBase) entityList.get(worldObj.rand.nextInt(entityList.size()));
 			player.inventory.currentItem = 0;
@@ -84,9 +87,17 @@ public class TileEntityEntityInteractor extends TileEntityEntityScanner implemen
 			}
 			
 			if(usesLeftMouseButton){
-				player.attackTargetEntityWithCurrentItem(entity);
+				try{
+					player.attackTargetEntityWithCurrentItem(entity);
+				} catch(RuntimeException e){
+					
+				}
 			} else{
-				player.interactWith(entity);
+				try{
+					player.interactWith(entity);
+				} catch(RuntimeException e){ //In case for some reason an item expects a EntityPlayerMP instead of EntityPlayer (Precision Shears)
+					
+				}
 				
 				/*
 				if(entity instanceof EntityAnimal){

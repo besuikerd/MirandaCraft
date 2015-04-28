@@ -2,41 +2,39 @@ grammar MineIO;
 
 @header{
 package com.besuikerd.mirandacraft.mineio.parser;
+
+import com.besuikerd.mirandacraft.mineio.namespace.NamespaceEntry;
 }
 
 //Parser rules
 
-program: statement*;
+program: statementSemicolon*;
+
+statementSemicolon: statement SEMICOLON?;
 
 statement:
-    ( declaration
-    | assignment
-    | block
-    | condition
-    | exp
-    | functionDeclaration
-    | whileStatement
-    | foreachStatement
-    | returnStatement
-    ) SEMICOLON?
+          typeRef variable (BECOMES exp)? #statementDeclaration
+        | variable assignmentType exp #statementAssignment
+        | LCURLY statementSemicolon* RCURLY #statementBlock
+        | IF LPAREN exp RPAREN statement (ELSE statement)? #statementCondition
+        | exp #statementExpression
+        | FUNCTION variable LPAREN (formalParameter (COMMA formalParameter)*)? RPAREN (COLON typeRef)? functionBody #statementFunctionDeclaration
+        | WHILE LPAREN exp RPAREN statement #statementWhile
+        | FOREACH LPAREN exp AS variable RPAREN statement #statementForeach
+        | RETURN exp #statementReturn
 ;
-    
-declaration     : typeRef Id (BECOMES exp)?;
-assignment      : Id assignmentType exp;
-block           : LCURLY statement* RCURLY;
-condition       : IF LPAREN exp RPAREN statement (ELSE statement)?;
-whileStatement  : WHILE LPAREN exp RPAREN statement;
-foreachStatement: FOREACH LPAREN exp AS Id RPAREN statement;
 
-
-returnStatement : RETURN exp;
-
-functionDeclaration : FUNCTION Id LPAREN (formalParameter (COMMA formalParameter)*)? RPAREN (COLON typeRef)? functionBody;
-formalParameter: typeRef Id;
+formalParameter: typeRef variable;
 functionBody : statement;
 
 
-assignmentType : (BECOMES | BECOMESADD | BECOMESSUB | BECOMESMUL | BECOMESDIV);
+assignmentType : 
+      BECOMES       #assignmentTypeBecomes 
+    | BECOMESADD    #assignmentTypeBecomesAdd
+    | BECOMESSUB    #assignmentTypeBecomesSub
+    | BECOMESMUL    #assignmentTypeBecomesMul
+    | BECOMESDIV    #assignmentTypeBecomesDiv
+;
 
 exp:
 
@@ -46,8 +44,8 @@ exp:
     | LBRACKET (exp (COMMA exp)*)? RBRACKET #ExpArrayLiteral
     | LPAREN (exp (COMMA exp)*)? RPAREN #ExpTupleLiteral
     | LPAREN exp RPAREN #ExpParens
-    | Id LPAREN (exp (COMMA exp)*)? RPAREN #ExpFunctionCall
-    | Id #ExpVarRef
+    | variable LPAREN (exp (COMMA exp)*)? RPAREN #ExpFunctionCall
+    | variable #ExpVarRef
     | exp (MUL | DIV | MOD) exp #ExpBinary
     | exp (ADD | SUB) exp #ExpBinary
     | exp (GT | GTEQ | LT | LTEQ) exp #ExpBinary
@@ -62,6 +60,8 @@ exp:
     | itemDescriptor #ExpItemDescriptor
     //| recipe
 ;
+
+variable locals[NamespaceEntry namespaceEntry]: Id;
 
 itemDescriptor: LT itemModName COLON itemName GT;
 itemModName: Id;

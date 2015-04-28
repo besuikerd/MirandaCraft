@@ -7,8 +7,8 @@ public class TupleType extends Type{
 
 	protected Type[] innerTypes;
 	
-	public TupleType(String value, Type... innerTypes) {
-		super(TypeKind.TUPLE, value);
+	public TupleType(Type... innerTypes) {
+		super(TypeKind.TUPLE);
 		this.innerTypes = innerTypes;
 	}
 	

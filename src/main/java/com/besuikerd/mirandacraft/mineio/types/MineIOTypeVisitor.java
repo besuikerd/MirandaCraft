@@ -1,6 +1,12 @@
 package com.besuikerd.mirandacraft.mineio.types;
 
 import com.besuikerd.mirandacraft.mineio.parser.MineIOBaseVisitor;
+import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.AssignmentTypeBecomesAddContext;
+import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.AssignmentTypeBecomesContext;
+import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.AssignmentTypeBecomesDivContext;
+import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.AssignmentTypeBecomesMulContext;
+import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.AssignmentTypeBecomesSubContext;
+import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.AssignmentTypeContext;
 import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.ExpArrayLiteralContext;
 import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.ExpBooleanLiteralContext;
 import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.ExpContext;
@@ -22,17 +28,17 @@ public class MineIOTypeVisitor extends MineIOBaseVisitor<Type>{
 
 	@Override
 	public Type visitExpIntLiteral(ExpIntLiteralContext ctx) {
-		return new Type(TypeKind.INT, ctx.Int().getText());
+		return Type.INT;
 	}
 	
 	@Override
 	public Type visitExpBooleanLiteral(ExpBooleanLiteralContext ctx) {
-		return new Type(TypeKind.BOOLEAN, (ctx.TRUE() != null ? ctx.TRUE() : ctx.FALSE()).getText());
+		return Type.BOOLEAN;
 	}
 	
 	@Override
 	public Type visitExpStringLiteral(ExpStringLiteralContext ctx) {
-		return new Type(TypeKind.STRING, ctx.StringLiteral().getText());
+		return Type.STRING;
 	}
 	
 	@Override
@@ -56,7 +62,7 @@ public class MineIOTypeVisitor extends MineIOBaseVisitor<Type>{
 		for(int i = 0 ; i < innerTypes.length ; i++){
 			innerTypes[i] = ctx.exp(i).accept(this);
 		}
-		return new TupleType(ctx.getText(), innerTypes);
+		return new TupleType(innerTypes);
 	}
 	
 	@Override
@@ -71,32 +77,32 @@ public class MineIOTypeVisitor extends MineIOBaseVisitor<Type>{
 	
 	@Override
 	public Type visitTypeInt(TypeIntContext ctx) {
-		return new Type(TypeKind.INT, ctx.getText());
+		return new Type(TypeKind.INT);
 	}
 	
 	@Override
 	public Type visitTypeString(TypeStringContext ctx) {
-		return new Type(TypeKind.STRING, ctx.getText());
+		return new Type(TypeKind.STRING);
 	}
 	
 	@Override
 	public Type visitTypeBoolean(TypeBooleanContext ctx) {
-		return new Type(TypeKind.BOOLEAN, ctx.getText());
+		return new Type(TypeKind.BOOLEAN);
 	}
 	
 	@Override
 	public Type visitTypeContainer(TypeContainerContext ctx) {
-		return new Type(TypeKind.CONTAINER, ctx.getText());
+		return new Type(TypeKind.CONTAINER);
 	}
 	
 	@Override
 	public Type visitTypeItem(TypeItemContext ctx) {
-		return new Type(TypeKind.ITEM, ctx.getText());
+		return new Type(TypeKind.ITEM);
 	}
 	
 	@Override
 	public Type visitTypeRecipe(TypeRecipeContext ctx) {
-		return new Type(TypeKind.RECIPE, ctx.getText());
+		return new Type(TypeKind.RECIPE);
 	}
 	
 	@Override
@@ -105,12 +111,40 @@ public class MineIOTypeVisitor extends MineIOBaseVisitor<Type>{
 		for(int i = 0 ; i < innerTypes.length ; i++){
 			innerTypes[i] = ctx.typeRef(i).accept(this);
 		}
-		return new TupleType(ctx.getText(), innerTypes);
+		return new TupleType(innerTypes);
 	}
 	
 	@Override
 	public Type visitTypeArray(TypeArrayContext ctx) {
-		return new ArrayType(ctx.getText(), ctx.typeRef().accept(this));
+		return new ArrayType(ctx.typeRef().accept(this));
 	}
 	
+	@Override
+	public Type visitAssignmentTypeBecomes(AssignmentTypeBecomesContext ctx) {
+		return new FunctionType(new AnyType(), new AnyType());
+	}
+	
+	@Override
+	public Type visitAssignmentTypeBecomesAdd(
+			AssignmentTypeBecomesAddContext ctx) {
+		return new FunctionType(new TupleType(Type.INT), Type.INT);
+	}
+	
+	@Override
+	public Type visitAssignmentTypeBecomesDiv(
+			AssignmentTypeBecomesDivContext ctx) {
+		return new FunctionType(new TupleType(Type.INT), Type.INT);
+	}
+	
+	@Override
+	public Type visitAssignmentTypeBecomesMul(
+			AssignmentTypeBecomesMulContext ctx) {
+		return new FunctionType(new TupleType(Type.INT), Type.INT);
+	}
+	
+	@Override
+	public Type visitAssignmentTypeBecomesSub(
+			AssignmentTypeBecomesSubContext ctx) {
+		return new FunctionType(new TupleType(Type.INT), Type.INT);
+	}
 }

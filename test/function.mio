@@ -1,9 +1,13 @@
-
-
-function bli(){
-    return bla()
-}
-
 function bla(){
-    return 12
+    {
+        if(true){
+            return 1
+        }
+        
+        
+        int y;
+    }
+    
+    int x;
+    return 1
 }

@@ -2,6 +2,8 @@
 
 package com.besuikerd.mirandacraft.mineio.parser;
 
+import com.besuikerd.mirandacraft.mineio.namespace.NamespaceEntry;
+
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

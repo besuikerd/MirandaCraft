@@ -8,10 +8,12 @@ public enum TypeKind {
 	CONTAINER("container"),
 	RECIPE("recipe"),
 	ITEM("item"),
+	ERROR("error"),
+	ANY("any"),
 	ARRAY("array"),
 	TUPLE("tuple"),
-	FUNCTION("function"),
-	ERROR("error")
+	FUNCTION("function")
+	
 	;
 	
 	private String readableValue;

@@ -55,6 +55,7 @@ public class NameSpace<A extends NamespaceEntry> {
 		}
 		scopedEntries.peek().add(name);
 		entry.scopelevel = currentLevel;
+		entry.name = name;
 		stack.push(entry);
 	}
 	

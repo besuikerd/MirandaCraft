@@ -2,6 +2,8 @@
 
 package com.besuikerd.mirandacraft.mineio.parser;
 
+import com.besuikerd.mirandacraft.mineio.namespace.NamespaceEntry;
+
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -20,59 +22,74 @@ public interface MineIOVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(MineIOParser.ProgramContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#statement}.
+	 * Visit a parse tree produced by {@link MineIOParser#statementSemicolon}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatement(MineIOParser.StatementContext ctx);
+	T visitStatementSemicolon(MineIOParser.StatementSemicolonContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#declaration}.
+	 * Visit a parse tree produced by the {@code statementDeclaration}
+	 * labeled alternative in {@link MineIOParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclaration(MineIOParser.DeclarationContext ctx);
+	T visitStatementDeclaration(MineIOParser.StatementDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#assignment}.
+	 * Visit a parse tree produced by the {@code statementAssignment}
+	 * labeled alternative in {@link MineIOParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssignment(MineIOParser.AssignmentContext ctx);
+	T visitStatementAssignment(MineIOParser.StatementAssignmentContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#block}.
+	 * Visit a parse tree produced by the {@code statementBlock}
+	 * labeled alternative in {@link MineIOParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBlock(MineIOParser.BlockContext ctx);
+	T visitStatementBlock(MineIOParser.StatementBlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#condition}.
+	 * Visit a parse tree produced by the {@code statementCondition}
+	 * labeled alternative in {@link MineIOParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCondition(MineIOParser.ConditionContext ctx);
+	T visitStatementCondition(MineIOParser.StatementConditionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#whileStatement}.
+	 * Visit a parse tree produced by the {@code statementExpression}
+	 * labeled alternative in {@link MineIOParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitWhileStatement(MineIOParser.WhileStatementContext ctx);
+	T visitStatementExpression(MineIOParser.StatementExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#foreachStatement}.
+	 * Visit a parse tree produced by the {@code statementFunctionDeclaration}
+	 * labeled alternative in {@link MineIOParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitForeachStatement(MineIOParser.ForeachStatementContext ctx);
+	T visitStatementFunctionDeclaration(MineIOParser.StatementFunctionDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#returnStatement}.
+	 * Visit a parse tree produced by the {@code statementWhile}
+	 * labeled alternative in {@link MineIOParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitReturnStatement(MineIOParser.ReturnStatementContext ctx);
+	T visitStatementWhile(MineIOParser.StatementWhileContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#functionDeclaration}.
+	 * Visit a parse tree produced by the {@code statementForeach}
+	 * labeled alternative in {@link MineIOParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionDeclaration(MineIOParser.FunctionDeclarationContext ctx);
+	T visitStatementForeach(MineIOParser.StatementForeachContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code statementReturn}
+	 * labeled alternative in {@link MineIOParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatementReturn(MineIOParser.StatementReturnContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MineIOParser#formalParameter}.
 	 * @param ctx the parse tree
@@ -86,11 +103,40 @@ public interface MineIOVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctionBody(MineIOParser.FunctionBodyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MineIOParser#assignmentType}.
+	 * Visit a parse tree produced by the {@code assignmentTypeBecomes}
+	 * labeled alternative in {@link MineIOParser#assignmentType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssignmentType(MineIOParser.AssignmentTypeContext ctx);
+	T visitAssignmentTypeBecomes(MineIOParser.AssignmentTypeBecomesContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code assignmentTypeBecomesAdd}
+	 * labeled alternative in {@link MineIOParser#assignmentType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignmentTypeBecomesAdd(MineIOParser.AssignmentTypeBecomesAddContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code assignmentTypeBecomesSub}
+	 * labeled alternative in {@link MineIOParser#assignmentType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignmentTypeBecomesSub(MineIOParser.AssignmentTypeBecomesSubContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code assignmentTypeBecomesMul}
+	 * labeled alternative in {@link MineIOParser#assignmentType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignmentTypeBecomesMul(MineIOParser.AssignmentTypeBecomesMulContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code assignmentTypeBecomesDiv}
+	 * labeled alternative in {@link MineIOParser#assignmentType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignmentTypeBecomesDiv(MineIOParser.AssignmentTypeBecomesDivContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ExpIntLiteral}
 	 * labeled alternative in {@link MineIOParser#exp}.
@@ -196,6 +242,12 @@ public interface MineIOVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExpTransfer(MineIOParser.ExpTransferContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MineIOParser#variable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariable(MineIOParser.VariableContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MineIOParser#itemDescriptor}.
 	 * @param ctx the parse tree

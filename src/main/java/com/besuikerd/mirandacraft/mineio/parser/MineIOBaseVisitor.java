@@ -2,6 +2,8 @@
 
 package com.besuikerd.mirandacraft.mineio.parser;
 
+import com.besuikerd.mirandacraft.mineio.namespace.NamespaceEntry;
+
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -27,63 +29,70 @@ public class MineIOBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStatement(MineIOParser.StatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementSemicolon(MineIOParser.StatementSemicolonContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDeclaration(MineIOParser.DeclarationContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementDeclaration(MineIOParser.StatementDeclarationContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAssignment(MineIOParser.AssignmentContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementAssignment(MineIOParser.StatementAssignmentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBlock(MineIOParser.BlockContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementBlock(MineIOParser.StatementBlockContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCondition(MineIOParser.ConditionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementCondition(MineIOParser.StatementConditionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitWhileStatement(MineIOParser.WhileStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementExpression(MineIOParser.StatementExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitForeachStatement(MineIOParser.ForeachStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementFunctionDeclaration(MineIOParser.StatementFunctionDeclarationContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitReturnStatement(MineIOParser.ReturnStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementWhile(MineIOParser.StatementWhileContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFunctionDeclaration(MineIOParser.FunctionDeclarationContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementForeach(MineIOParser.StatementForeachContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitStatementReturn(MineIOParser.StatementReturnContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -104,7 +113,35 @@ public class MineIOBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAssignmentType(MineIOParser.AssignmentTypeContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAssignmentTypeBecomes(MineIOParser.AssignmentTypeBecomesContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitAssignmentTypeBecomesAdd(MineIOParser.AssignmentTypeBecomesAddContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitAssignmentTypeBecomesSub(MineIOParser.AssignmentTypeBecomesSubContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitAssignmentTypeBecomesMul(MineIOParser.AssignmentTypeBecomesMulContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitAssignmentTypeBecomesDiv(MineIOParser.AssignmentTypeBecomesDivContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -210,6 +247,13 @@ public class MineIOBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitExpTransfer(MineIOParser.ExpTransferContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitVariable(MineIOParser.VariableContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

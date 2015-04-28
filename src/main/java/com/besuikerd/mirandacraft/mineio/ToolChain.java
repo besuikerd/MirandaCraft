@@ -4,18 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.TokenStream;
 
 import com.besuikerd.mirandacraft.mineio.errorreport.CompilerMessageReporterSyntaxErrorListener;
 import com.besuikerd.mirandacraft.mineio.namespace.Environment;
 import com.besuikerd.mirandacraft.mineio.parser.MineIOLexer;
 import com.besuikerd.mirandacraft.mineio.parser.MineIOParser;
 import com.besuikerd.mirandacraft.mineio.parser.MineIOParser.ProgramContext;
-import com.besuikerd.mirandacraft.mineio.types.MineIOFunctionTypeVisitor;
+import com.besuikerd.mirandacraft.mineio.types.MineIOTypeChecker;
 
 public class ToolChain {
 	public ProgramContext parse(Environment environment, String input) throws RecognitionException{
@@ -65,7 +65,7 @@ public class ToolChain {
 	}
 	
 	public ToolChain typeCheck(Environment environment, ProgramContext ctx){
-		ctx.accept(new MineIOFunctionTypeVisitor(environment));
+		ctx.accept(new MineIOTypeChecker(environment));
 		return this;
 	}
 }

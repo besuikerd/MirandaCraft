@@ -70,6 +70,8 @@ public class EntityFilterVisitor extends AbstractClassifierVisitor<Entity, Boole
 		.put("adult", new EntityFilterRuleAdult())
 		.put("health", new EntityFilterRuleHealth())
 		.put("breedable", new EntityFilterRuleBreedable())
+		.put("shearable", new EntityFilterRuleShearable())
+		.put("sheared", new EntityFilterRuleShearable(true))
 		.build();
 			
 		DEFAULT_TYPES = new ImmutableMap.Builder<String, Class<?>>()
@@ -156,7 +158,6 @@ public class EntityFilterVisitor extends AbstractClassifierVisitor<Entity, Boole
 				return false;
 			}
 			boolean pass = filter.validate(obj, filter.asValidArgument(entry.getValue()));
-			
 			if(!pass && entry.getValue().isEquals() || pass && !entry.getValue().isEquals()){
 				return false;
 			}
